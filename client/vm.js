@@ -58,9 +58,17 @@ $(document).on('click', '#buySuica', function() {
     });
 });
 
+$(document).on('click', '#addVm', function() {
+  window.location.href = '/lessons/a_vending_machine/client/setting.html'
+});
+
+$(document).on('click', '#setDrink', function() {
+  window.location.href = '/lessons/a_vending_machine/client/setting.html'
+});
+
 $(document).on('click', '#logout', function() {
-          window.location.href = '/lessons/a_vending_machine/client/top.html'
-        });
+  window.location.href = '/lessons/a_vending_machine/client/top.html'
+});
 
 function displayVmTopView(){
   $.post("/lessons/a_vending_machine/server/vmtop.php",

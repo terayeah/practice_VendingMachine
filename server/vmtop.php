@@ -27,6 +27,8 @@ $html .= $suicaButton;
 $html .= "<h3>現金とSuica両方会計の自販機</h3>";
 $html .= $bothButton;
 $html .= "<br>";
+$html .= "<button id='addVm'>自販機を追加する</button>";
+$html .= "<br>";
 $html .= "<button id='logout'>サインアウト</button>";
 
 echo $html;

@@ -116,15 +116,15 @@ function displayBuyButton($vm){
 }
 
 function displayAddVendingMachineButton(){
-  echo "<form action='vmSetting.php' method='POST'>
-    <h4>追加フォーム</h4>
-      <select name='vmType'>
-        <option value='cash'>現金会計のみ</option>
-        <option value='suica'>Suica会計のみ</option>
-        <option value='both'>現金Suica両方会計</option>
-      <input type='text' name='vmName' placeholder='自販機名'>
-      <input type='submit' name='addVm' value='追加'>
-    </form>";
+  $html .= "<h4>追加フォーム</h4>";
+  $html .= "<select name='vmType'>";
+  $html .= "<option value='cash'>現金会計のみ</option>";
+  $html .= "<option value='suica'>Suica会計のみ</option>";
+  $html .= "<option value='both'>現金Suica両方会計</option>";
+  $html .= "<input type='text' id='vmName' placeholder='自販機名'>";
+  $html .= "<button id='add_vm'>追加</button>";
+  $html .= "<br>";
+  return $html;
 }
 
 function displayAddDrinkForm($drinkTableArray){
