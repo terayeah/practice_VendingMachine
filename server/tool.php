@@ -64,46 +64,18 @@ function displayFooter($user, $drinkInfo){
 }
 
 function displayDrinkButton($vm){
-  $html .= "<form action='vmView.php' method='POST'>";
   $drinkArray = $vm->getDrinks();
   foreach ($drinkArray as $drinkId => $drink) {
     $name = $drink->getName();
     $price = $drink->getPrice();
     if($vm->checkStock($name)){
-      $html .= "<input type='submit' name='" . $drinkId . "' value='" . $name . " ¥ " . $price . "'>";
+      $html .= "<button class='selectedDrink' value='" . $drinkId . "'>" . $name . " ¥ " . $price . "</button>";
     }else{
-      $html .= "<input type='submit' name='" . $drinkId . "' value='" . $name . "売り切れ'>";
+      $html .= "<button class='selectedDrink' value='" . $drinkId . "'>" . $name . " 売り切れ </button>";
     }
   }
-  $html .= "</form><br/>";
+  $html .= "<br/>";
   return $html;
-}
-
-function displayVendingMachineButton($vmArray, $cashButton, $suicaButton, $bothButton){
-  foreach($vmArray as $vm){
-    if ($vm['type'] == VendingMachine::$vm_type_Cash){
-      $cashButton .= "<button type='submit' name='" . PostUtil::$selectedVm . "' value='" . $vm['id'] . "'>" . $vm['name'] . "</button></br>";
-    }
-    if ($vm['type'] == VendingMachine::$vm_type_Suica){
-      $suicaButton .= "<button type='submit' name='" . PostUtil::$selectedVm . "' value='" . $vm['id'] . "'>" . $vm['name'] . "</button></br>";
-    }
-    if ($vm['type'] == VendingMachine::$vm_type_Both){
-      $bothButton .= "<button type='submit' name='" . PostUtil::$selectedVm . "' value='" . $vm['id'] . "'>" . $vm['name'] . "</button></br>";
-    }
-  }
-  echo "<h3>現金会計のみの自販機</h3>";
-  echo "<form action='vmView.php' method='POST'>";
-  echo $cashButton;
-  echo "</form>";
-  echo "<h3>Suica会計のみの自販機</h3>";
-  echo "<form action='vmView.php' method='POST'>";
-  echo $suicaButton;
-  echo "</form>";
-  echo "<h3>現金とSuica両方会計の自販機</h3>";
-  echo "<form action='vmView.php' method='POST'>";
-  echo $bothButton;
-  echo "</form>";
-  echo "<br>";
 }
 
 function displalyResetButton(){
@@ -118,11 +90,9 @@ function displalyResetButton(){
 
 function displayCashSlot($vm){
   if ($vm->getType() == VendingMachine::$vm_type_Cash || $vm->getType() == VendingMachine::$vm_type_Both){
-    $html .= "<form action='vmView.php' method='POST'>";
-    $html .= "<input type='text' name='howMuchCash' placeholder='金額を記入'>";
-    $html .= "<input type='submit' name='putCash' value='入金'>";
-    $html .= "<input type='submit' name='backChange' value='お釣り'>";
-    $html .= "</form>";
+    $html .= "<input type='text' id='howMuchCash' placeholder='金額を記入'>";
+    $html .= "<button id='putCash'>入金</button>";
+    $html .= "<button id='backChange'>お釣り</button>";
     $html .= "<br>";
     return $html;
   }
@@ -130,10 +100,8 @@ function displayCashSlot($vm){
 
 function displaySuicaChargeMachine($vm){
   if ($vm->getType() == VendingMachine::$vm_type_Suica || $vm->getType() == VendingMachine::$vm_type_Both){
-    $html .= "<form action='vmView.php' method='POST'>";
-    $html .= "<input type='text' name='howMuchSuica' placeholder='Suicaへのチャージ額を記入'>";
-    $html .= "<input type='submit' name='charge' value='チャージ'>";
-    $html .= "</form>";
+    $html .= "<input type='text' id='howMuchSuica' placeholder='Suicaへのチャージ額を記入'>";
+    $html .= "<button id='charge'>チャージ</button>";
     $html .= "<br>";
     return $html;
   }
@@ -141,10 +109,9 @@ function displaySuicaChargeMachine($vm){
 
 function displayBuyButton($vm){
   if ($vm->getType() == VendingMachine::$vm_type_Suica || $vm->getType() == VendingMachine::$vm_type_Both){
-    echo "<form action='vmView.php' method='POST'>
-    <input type='submit' name='buySuica' value='購入'>
-    </form>
-    <br>";
+    $html .= "<button id='buySuica'>購入</button>";
+    $html .= "<br>";
+    return $html;
   }
 }
 

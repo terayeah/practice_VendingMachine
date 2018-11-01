@@ -11,7 +11,6 @@ $db = new PDO(PDO_DSN, DB_USERNAME, DB_PASSWORD);
 $stmt = $db->query("select * from vending_machine where id = " . $_POST['selectedVmId']);
 $vmRecord = $stmt->fetchAll(PDO::FETCH_ASSOC);
 $vm = new VendingMachine($vmRecord[0]['id'], $vmRecord[0]['name'], $vmRecord[0]['type'], $vmRecord[0]['cash'], $vmRecord[0]['suica'], $vmRecord[0]['charge']);
-$_SESSION['selectedVm'] = $vm;
 
 // 自販機のdrinkArray,stockArrayの取得
 $stmt = $db->query("select * from vending_machine_drink where vending_machine_id = " . $vm->getId());
@@ -45,8 +44,16 @@ $html .= displayCashSlot($vm);
 $html .= displaySuicaChargeMachine($vm);
 // ドリンクボタンの作成
 $html .= displayDrinkButton($vm);
+// suica購入ボタン
+$html .= displayBuyButton($vm);
 // footerの作成
 $html .= displayFooter($user, $drinkInfo);
 
 $html .= "<button id='back_vm_top'>戻る</button></br>";
-echo $html;
+
+$rs = array(
+    "html" => $html,
+    "vmId" => htmlspecialchars($vmRecord[0]['id'])
+);
+header('Content-Type: application/json; charset=utf-8');
+echo json_encode($rs);

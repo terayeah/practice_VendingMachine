@@ -8,7 +8,11 @@
   <script type="text/javascript" src="./vm.js"></script>
   <script type="text/javascript">
   $(function(){
-    displayVmTopView();
+    if($.cookie('choicedVmId')){
+      displayVmView($.cookie('choicedVmId'));
+    }else{
+      displayVmTopView();
+    }
 
   });
   </script>
