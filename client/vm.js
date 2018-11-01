@@ -18,6 +18,16 @@ $(document).on('click', '#putCash', function() {
     });
 });
 
+$(document).on('click', '#charge', function() {
+  $.post("/lessons/a_vending_machine/server/charge.php",
+    { "userEncrypt": $.cookie('userEncrypt'),
+      "choicedVmId": $.cookie('choicedVmId'),
+      "howMuchSuica": $('#howMuchSuica').val() },
+    function(){
+      displayVmView($.cookie('choicedVmId'));
+    });
+});
+
 $(document).on('click', '#backChange', function() {
   $.post("/lessons/a_vending_machine/server/backChange.php",
     { "userEncrypt": $.cookie('userEncrypt'),
