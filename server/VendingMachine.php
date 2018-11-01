@@ -86,7 +86,7 @@ Class VendingMachine{
   }
 
   public function decStock($drinkId){
-    $drinkInfo = $_SESSION[SessionUtil::$SESSION_KEY_DB_DRINK];
+    $drinkInfo = $_SESSION['drinkInfo'];
     $drinkName = $drinkInfo[$drinkId - 1]['name'];
     foreach ($this->stockArray as $key => $value){
       if($key == $drinkName){
@@ -193,13 +193,13 @@ Class VendingMachine{
   public function choiceSuicaDrink($drink, $drinkId){
     if($this->checkStock($drink->getName())){
       echo $drink->getName() . "を選択中 <br/>";
-      $_SESSION[SessionUtil::$SESSION_KEY_CHOICE] = $drinkId;
+      $_SESSION["choice"] = $drinkId;
     }
   }
 
   public function buySuicaVm($user, $drinkArray, $db){
     foreach ($drinkArray as $drinkId => $drink) {
-      if($_SESSION[SessionUtil::$SESSION_KEY_CHOICE] == $drinkId){
+      if($_SESSION["choice"] == $drinkId){
         if($this->checkStock($drink->getName()) && $this->checkSuica($user, $drink)){
           $this->addSuica($drink->getPrice());
           $this->decStock($drinkId);
@@ -211,6 +211,7 @@ Class VendingMachine{
           $db->exec("update users set suica = " . $user->getSuica() . " where name = '" . $user->getName() . "'");
           $user->addDrink($drinkId, $user->getName(), $db);
           $db->commit();
+          $_SESSION["choice"] = "";
           break;
         }
       }

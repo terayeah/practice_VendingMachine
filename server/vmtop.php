@@ -2,6 +2,8 @@
 require_once("./define.php");
 require_once("./VendingMachine.php");
 session_start();
+$_SESSION["choice"] = "";
+
 $db = new PDO(PDO_DSN, DB_USERNAME, DB_PASSWORD);
 $stmt = $db->query("select * from vending_machine");
 $vmArray = $stmt->fetchAll(PDO::FETCH_ASSOC);

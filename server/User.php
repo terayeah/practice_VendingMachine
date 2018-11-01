@@ -22,6 +22,10 @@ class User{
     return $this->name;
   }
 
+  public function getId(){
+    return $this->id;
+  }
+
   public static function getIdFromName($name, $db){
     $stmt = $db->query("select * from users where name = '" . $name . "'");
     $userRecord = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -55,7 +59,7 @@ class User{
 
   public function addDrink($drinkId, $userName, $db){
     $this->drinkArray[$drinkId] = $this->drinkArray[$drinkId] + 1;
-    $userId = SessionUtil::Get(SessionUtil::$SESSION_KEY_USER_ID);
+    $userId = $this->getId();
     if($this->drinkArray[$drinkId] == 1){
       $db->exec("insert into user_drink (user_id, drink_id, drink_count) values (" . $userId . ", " . $drinkId . ", 1)");
     }else{
