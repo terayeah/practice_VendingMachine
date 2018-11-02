@@ -28,7 +28,7 @@ foreach ($drinkInfo as $value) {
 }
 
 $error = "";
-if($_POST["addDrinkCount"] == ""){
+if($_POST["changeDrinkStock"] == ""){
   $error .= "個数を入力してください<br/>";
 }
 
@@ -37,27 +37,23 @@ if(!$error == ""){
   return;
 }
 
-$isUpdated = false;
-foreach ($drinkArray as $drinkId => $drink) {
-  if($drinkId == $_POST["addedExistingDrink"]){
-    echo "すでに同じ商品が存在しています！変更の場合は変更フォームを利用してください<br/>";
-    $isUpdated = true;
-    break;
+$isChecked = false;
+if($_POST['changeDrinkStock'] == null){
+  echo "変更がありません<br/>";
+  $isChecked = true;
+}
+if(!$isChecked){
+  foreach ($drinkArray as $drinkId => $drink) {
+    if($drinkId == $_POST['changedDrink']){
+      $drink = $drinkTableArray[$_POST['changedDrink']];
+      $drinkName = $drink->getName();
+      $vm->setStock($drinkName, $_POST['changeDrinkStock']);
+      $db->exec("update vending_machine_drink set drink_count = " . $_POST['changeDrinkStock'] . " where vending_machine_id = " . $vm->getId() . " and drink_id = " . $drinkId);
+      echo "在庫を変更しました<br/>";
+      break;
+    }
   }
 }
-if(!$isUpdated){
-  $drink = $drinkTableArray[$_POST["addedExistingDrink"]];
-  $drinkName = $drink->getName();
-  $drinkPrice = $drink->getPrice();
-  $drinkArray[$_POST["addedExistingDrink"]] = new Drink(
-    $drinkName,
-    $drinkPrice
-  );
-  $db->exec("insert into vending_machine_drink (vending_machine_id, drink_id, drink_count) values (" . $vm->getId() . ", " . $_POST["addedExistingDrink"] . ", " . $_POST["addDrinkCount"] . ")");
-  echo "追加しました！<br/>";
-}
-
-
 
 
  ?>

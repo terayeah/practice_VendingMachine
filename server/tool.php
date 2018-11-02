@@ -134,8 +134,8 @@ function displayAddDrinkForm($drinkTableArray){
       $html .= "<option value=" . $drinkId . ">" . $drink->getName() . "¥" . $drink->getPrice() . "</option>";
     }
   $html .= "<input type='text' id='addDrinkCount' placeholder='個数'>";
-  $html .= "<button id='addExistingDrink'>追加</button>";
   $html .= "</select>";
+  $html .= "<button id='addExistingDrink'>追加</button>";
   $html .= "<br>";
   return $html;
 }
@@ -148,8 +148,8 @@ function displayChangeDrinkForm($drinkArray){
         $html .= "<option value=" . $drinkId . ">" . $drink->getName() . "¥" . $drink->getPrice() . "</option>";
       }
     $html .= "<input type='number' id='changeDrinkStock' placeholder='変更個数'>";
-    $html .= "<button id='changeDrink'>変更</button>";
     $html .= "</select>";
+    $html .= "<button id='changeDrink'>変更</button>";
     $html .= "<br>";
     return $html;
   }
@@ -162,8 +162,8 @@ function displayDeleteDrinkForm($drinkArray){
       foreach ($drinkArray as $drinkId => $drink) {
         $html .= "<option value=" . $drinkId . ">" . $drink->getName() . "¥" . $drink->getPrice() . "</option>";
       }
-    $html .= "<button id='deleteDrink'>削除</button>";
     $html .= "</select>";
+    $html .= "<button id='deleteDrink'>削除</button>";
     $html .= "<br>";
     return $html;
   }
@@ -172,7 +172,7 @@ function displayDeleteDrinkForm($drinkArray){
 function displayMakeProductForm(){
   $html = "<h3>新規商品の開発</h3>";
   $html .= "<input type='text' id='drinkName' placeholder='商品名'>";
-  $html .= "<input type='number' naidme='drinkPrice' placeholder='価格'>";
+  $html .= "<input type='number' id='drinkPrice' placeholder='価格'>";
   $html .= "<button id='addDrink'>追加</button>";
   $html .= "<br>";
   return $html;
