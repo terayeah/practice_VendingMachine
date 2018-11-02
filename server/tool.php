@@ -128,75 +128,69 @@ function displayAddVendingMachineButton(){
 }
 
 function displayAddDrinkForm($drinkTableArray){
-  echo "<form action='drinkSetting.php' method='POST'>
-    <h3>追加フォーム</h3>
-      <select name='addedExistingDrink'>";
-      foreach ($drinkTableArray as $drinkId => $drink) {
-        echo "<option value=" . $drinkId . ">" . $drink->getName() . "¥" . $drink->getPrice() . "</option>";
-      }
-      echo "<input type='number' name='addDrinkCount' placeholder='個数'>
-      <input type='submit' name='addExistingDrink' value='追加'>
-      </select>
-  </form>";
+  $html = "<h3>追加フォーム</h3>";
+  $html .= "<select name='addedExistingDrink'>";
+    foreach ($drinkTableArray as $drinkId => $drink) {
+      $html .= "<option value=" . $drinkId . ">" . $drink->getName() . "¥" . $drink->getPrice() . "</option>";
+    }
+  $html .= "<input type='text' id='addDrinkCount' placeholder='個数'>";
+  $html .= "<button id='addExistingDrink'>追加</button>";
+  $html .= "</select>";
+  $html .= "<br>";
+  return $html;
 }
 
 function displayChangeDrinkForm($drinkArray){
   if(!empty($drinkArray)){
-    echo "<form action='drinkSetting.php' method='POST'>
-    <h3>変更フォーム</h3>
-      <select name='changedDrink'>";
+    $html = "<h3>変更フォーム</h3>";
+    $html .= "<select name='changedDrink'>";
       foreach ($drinkArray as $drinkId => $drink) {
-        echo "<option value=" . $drinkId . ">" . $drink->getName() . "¥" . $drink->getPrice() . "</option>";
+        $html .= "<option value=" . $drinkId . ">" . $drink->getName() . "¥" . $drink->getPrice() . "</option>";
       }
-      echo "<input type='number' name='changeDrinkStock' placeholder='変更個数'>
-      <input type='submit' name='changeDrink' value='変更'>
-    </select>
-    </form>";
+    $html .= "<input type='number' id='changeDrinkStock' placeholder='変更個数'>";
+    $html .= "<button id='changeDrink'>変更</button>";
+    $html .= "</select>";
+    $html .= "<br>";
+    return $html;
   }
 }
 
 function displayDeleteDrinkForm($drinkArray){
   if(!empty($drinkArray)){
-    echo "<form action='drinkSetting.php' method='POST' onsubmit='return checkSubmit()'>
-    <h3>削除フォーム</h3>
-      <select name='deletedDrink'>";
+    $html = "<h3>削除フォーム</h3>";
+    $html .= "<select name='deletedDrink'>";
       foreach ($drinkArray as $drinkId => $drink) {
-        echo "<option value=" . $drinkId . ">" . $drink->getName() . "¥" . $drink->getPrice() . "</option>";
+        $html .= "<option value=" . $drinkId . ">" . $drink->getName() . "¥" . $drink->getPrice() . "</option>";
       }
-      echo "<input type='submit' name='deleteDrink' value='削除'>
-    </select>
-    </form>
-    <br>
-    <script type='text/javascript'>
-     function checkSubmit() {
-      return confirm('削除してもよろしいですか？');
-     }
-    </script>";
+    $html .= "<button id='deleteDrink'>削除</button>";
+    $html .= "</select>";
+    $html .= "<br>";
+    return $html;
   }
 }
 
 function displayMakeProductForm(){
-  echo "<form action='drinkSetting.php' method='POST'>
-    <h3>新規商品の開発</h3>
-      <input type='text' name='drinkName' placeholder='商品名'>
-      <input type='number' name='drinkPrice' placeholder='価格'>
-      <input type='submit' name='addDrink' value='追加'>
-  </form>";
+  $html = "<h3>新規商品の開発</h3>";
+  $html .= "<input type='text' id='drinkName' placeholder='商品名'>";
+  $html .= "<input type='number' naidme='drinkPrice' placeholder='価格'>";
+  $html .= "<button id='addDrink'>追加</button>";
+  $html .= "<br>";
+  return $html;
 }
 
 function displayChangeProductForm($drinkTableArray){
   if(!empty($drinkTableArray)){
-    echo "<form action='drinkSetting.php' method='POST'>
-    <h3>変更フォーム</h3>
-      <select name='changedProduct'>";
-      foreach ($drinkTableArray as $drinkId => $drink) {
-        echo "<option value=" . $drinkId . ">" . $drink->getName() . "¥" . $drink->getPrice() . "</option>";
-      }
-      echo "<input type='text' name='changeProductName' placeholder='変更名称'>
-      <input type='number' name='changeProductPrice' placeholder='変更価格'>
-      <input type='submit' name='changeProduct' value='変更'>
-    </select>
-    </form>";
+    $html = "<h3>変更フォーム</h3>";
+    $html .= "<select name='changedProduct'>";
+    foreach ($drinkTableArray as $drinkId => $drink) {
+      $html .= "<option value=" . $drinkId . ">" . $drink->getName() . "¥" . $drink->getPrice() . "</option>";
+    }
+    $html .= "<input type='text' id='changeProductName' placeholder='変更名称'>";
+    $html .= "<input type='number' id='changeProductPrice' placeholder='変更価格'>";
+    $html .= "<button id='changeProduct'>変更</button>";
+    $html .= "</select>";
+    $html .= "<br>";
+    return $html;
   }
 }
 
