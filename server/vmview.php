@@ -48,7 +48,7 @@ if($vm->getDrinks() == array()){
 // ユーザーのドリンクアレイ取得
 $user->setDrinkArray($userId, $db);
 
-$html .= "<h2>自販機 : " . $vm->getName() . "</h2>";
+$html .= "<h3>自販機 : " . $vm->getName() . "</h3>";
 
 // headerの作成
 $html .= displayHeader($vm);

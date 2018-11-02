@@ -27,7 +27,7 @@ foreach ($drinkInfo as $value) {
 }
 
 
-$html .= "<h2>自販機 : " . $vm->getName() . "</h2>";
+$html .= "<h2>自販機 : " . $vm->getName() . "のドリンクを編集する</h2>";
 
 // ドリンク追加ボタン
 $html .= displayAddDrinkForm($drinkTableArray);
@@ -36,7 +36,8 @@ $html .= displayChangeDrinkForm($drinkArray);
 // ドリンク削除ボタン
 $html .= displayDeleteDrinkForm($drinkArray);
 
-$html .= "<h2>商品開発</h2>";
+$html .= "<br>";
+$html .= "<h2>商品開発をする</h2>";
 // 商品作成ボタン
 $html .= displayMakeProductForm();
 // 商品変更ボタン
