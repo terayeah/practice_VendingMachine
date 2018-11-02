@@ -79,9 +79,13 @@ $(document).on('click', '#back_vm_view', function() {
   window.location.href = '/lessons/a_vending_machine/client/vm.html'
 });
 
+$(document).on('click', '#gologin', function() {
+  window.location.href = '/lessons/a_vending_machine/client/top.html'
+});
+
 function displayAddVmView(){
   $.post("/lessons/a_vending_machine/server/setVm.php",
-        { },
+        {"userEncrypt": $.cookie('userEncrypt') },
         function(data){
           $("#view").html(data);
         });

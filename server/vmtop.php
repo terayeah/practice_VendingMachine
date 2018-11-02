@@ -2,7 +2,18 @@
 require_once("./define.php");
 require_once("./VendingMachine.php");
 session_start();
-$_SESSION["choice"] = "";
+$userId = $_SESSION[$_POST['userEncrypt']];
+if($userId == null){
+  echo "ログインしてください<br/>";
+  $html .= "<button id='logout'>ログインする</button>";
+  echo $html;
+  return;
+}
+
+unset($_SESSION[$userId . 'SES_KEY_VM']);
+unset($_SESSION[$userId . 'SES_KEY_USER']);
+unset($_SESSION[$userId . 'SES_KEY_VM_DRINK_RECORD']);
+unset($_SESSION["choice"]);
 
 $db = new PDO(PDO_DSN, DB_USERNAME, DB_PASSWORD);
 $stmt = $db->query("select * from vending_machine");

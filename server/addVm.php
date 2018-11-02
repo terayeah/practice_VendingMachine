@@ -20,5 +20,7 @@ if($error != ""){
 
 $name = $_POST['vmName'];
 $type = $_POST['vmType'];
+$db->beginTransaction();
 $db->exec("insert into vending_machine (name, type) values ('" . $name . "', '" . $type . "')");
+$db->commit();
 echo "新規作成！<br/>";

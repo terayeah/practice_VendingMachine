@@ -8,13 +8,11 @@ session_start();
 
 // 選択した自販機の取得
 $db = new PDO(PDO_DSN, DB_USERNAME, DB_PASSWORD);
-$stmt = $db->query("select * from vending_machine where id = " . $_POST['choicedVmId']);
-$vmRecord = $stmt->fetchAll(PDO::FETCH_ASSOC);
-$vm = new VendingMachine($vmRecord[0]['id'], $vmRecord[0]['name'], $vmRecord[0]['type'], $vmRecord[0]['cash'], $vmRecord[0]['suica'], $vmRecord[0]['charge']);
+$userId = $_SESSION[$_POST['userEncrypt']];
+$vm = $_SESSION[$userId . 'SES_KEY_VM'];
 
 // 自販機のdrinkArray,stockArrayの取得
-$stmt = $db->query("select * from vending_machine_drink where vending_machine_id = " . $vm->getId());
-$drink_in_vending_machine = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$drink_in_vending_machine = $_SESSION[$userId . 'SES_KEY_VM_DRINK_RECORD'];
 $vm->setDrinkArray($db, $drink_in_vending_machine);
 $drinkArray = $vm->getDrinks();
 if($drinkArray == null){
@@ -23,8 +21,7 @@ if($drinkArray == null){
 
 //$drinkTableArrayの作成
 $drinkTableArray = array();
-$stmt = $db->query("select * from drink");
-$drinkInfo = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$drinkInfo = $_SESSION['drinkInfo'];
 foreach ($drinkInfo as $value) {
   $drinkTableArray[$value['id']] = new Drink($value['name'], $value['price']);
 }
@@ -55,7 +52,9 @@ if(!$isUpdated){
     $drinkName,
     $drinkPrice
   );
+  $db->beginTransaction();
   $db->exec("insert into vending_machine_drink (vending_machine_id, drink_id, drink_count) values (" . $vm->getId() . ", " . $_POST["addedExistingDrink"] . ", " . $_POST["addDrinkCount"] . ")");
+  $db->commit();
   echo "追加しました！<br/>";
 }
 

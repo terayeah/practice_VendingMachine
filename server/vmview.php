@@ -5,18 +5,20 @@ require_once("./User.php");
 require_once("./Drink.php");
 require_once("./tool.php");
 session_start();
-
-// 選択した自販機の取得
 $db = new PDO(PDO_DSN, DB_USERNAME, DB_PASSWORD);
-$stmt = $db->query("select * from vending_machine where id = " . $_POST['selectedVmId']);
-$vmRecord = $stmt->fetchAll(PDO::FETCH_ASSOC);
-$vm = new VendingMachine($vmRecord[0]['id'], $vmRecord[0]['name'], $vmRecord[0]['type'], $vmRecord[0]['cash'], $vmRecord[0]['suica'], $vmRecord[0]['charge']);
 
 //ログインユーザーの取得
 $userId = $_SESSION[$_POST['userEncrypt']];
 $stmt = $db->query("select * from users where id = " . $userId);
 $userRecord = $stmt->fetchAll(PDO::FETCH_ASSOC);
 $user = new User($userRecord[0]['id'], $userRecord[0]['name'], $userRecord[0]['cash'], $userRecord[0]['suica']);
+$_SESSION[$userId . 'SES_KEY_USER'] = $user;
+
+// 選択した自販機の取得
+$stmt = $db->query("select * from vending_machine where id = " . $_POST['selectedVmId']);
+$vmRecord = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$vm = new VendingMachine($vmRecord[0]['id'], $vmRecord[0]['name'], $vmRecord[0]['type'], $vmRecord[0]['cash'], $vmRecord[0]['suica'], $vmRecord[0]['charge']);
+$_SESSION[$userId . 'SES_KEY_VM'] = $vm;
 
 // 商品データの取得
 if(!isset($_SESSION['drinkInfo'])){
@@ -29,11 +31,18 @@ $drinkInfo = $_SESSION['drinkInfo'];
 // 自販機のdrinkArray,stockArrayの取得
 $stmt = $db->query("select * from vending_machine_drink where vending_machine_id = " . $vm->getId());
 $drink_in_vending_machine = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$_SESSION[$userId . 'SES_KEY_VM_DRINK_RECORD'] = $drink_in_vending_machine;
 $vm->setDrinkArray($db, $drink_in_vending_machine);
+
+// ユーザーのドリンクアレイ取得
+$stmt = $db->query("select * from user_drink where user_id = " . $userId);
+$user_drink = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$user->setDrinkArray($db, $user_drink);
 
 if($vm->getDrinks() == array()){
   $html .= "商品を追加してください</br>";
   $html .= "<button id='setDrink'>商品を編集する</button></br>";
+  $html .= "<button id='back_vm_top'>戻る</button></br>";
 
   $rs = array(
       "html" => $html,
@@ -44,9 +53,6 @@ if($vm->getDrinks() == array()){
 
   return;
 }
-
-// ユーザーのドリンクアレイ取得
-$user->setDrinkArray($userId, $db);
 
 $html .= "<h3>自販機 : " . $vm->getName() . "</h3>";
 

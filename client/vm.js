@@ -67,6 +67,8 @@ $(document).on('click', '#setDrink', function() {
 });
 
 $(document).on('click', '#logout', function() {
+  $.removeCookie("userEncrypt");
+  $.removeCookie("choicedVmId");
   window.location.href = '/lessons/a_vending_machine/client/top.html'
 });
 

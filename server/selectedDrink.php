@@ -7,23 +7,15 @@ require_once("./tool.php");
 session_start();
 
 $db = new PDO(PDO_DSN, DB_USERNAME, DB_PASSWORD);
-$stmt = $db->query("select * from vending_machine where id = " . $_POST['choicedVmId']);
-$vmRecord = $stmt->fetchAll(PDO::FETCH_ASSOC);
-$vm = new VendingMachine($vmRecord[0]['id'], $vmRecord[0]['name'], $vmRecord[0]['type'], $vmRecord[0]['cash'], $vmRecord[0]['suica'], $vmRecord[0]['charge']);
 
 $userId = $_SESSION[$_POST['userEncrypt']];
-$stmt = $db->query("select * from users where id = " . $userId);
-$userRecord = $stmt->fetchAll(PDO::FETCH_ASSOC);
-$user = new User($userRecord[0]['id'], $userRecord[0]['name'], $userRecord[0]['cash'], $userRecord[0]['suica']);
+$vm = $_SESSION[$userId . 'SES_KEY_VM'];
+$user = $_SESSION[$userId . 'SES_KEY_USER'];
 
 // 自販機のdrinkArray,stockArrayの取得
-$stmt = $db->query("select * from vending_machine_drink where vending_machine_id = " . $vm->getId());
-$drink_in_vending_machine = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$drink_in_vending_machine = $_SESSION[$userId . 'SES_KEY_VM_DRINK_RECORD'];
 $vm->setDrinkArray($db, $drink_in_vending_machine);
 $drinkArray = $vm->getDrinks();
-
-// ユーザーのドリンクアレイ取得
-$user->setDrinkArray($userId, $db);
 
 foreach ($drinkArray as $drinkId => $drink){
   if($_POST['selectedDrink'] == $drinkId){

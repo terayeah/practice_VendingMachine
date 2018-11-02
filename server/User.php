@@ -67,10 +67,7 @@ class User{
     }
   }
 
-  public function setDrinkArray($userId, $db){
-    $stmt = $db->query("select * from user_drink where user_id = " . $userId);
-    $user_drink = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    $_SESSION['user_drink_info'] = $user_drink;
+  public function setDrinkArray($db, $user_drink){
     foreach ($user_drink as $user_drink_record) {
       $drink_count = $user_drink_record['drink_count'];
       $this->drinkArray[$user_drink_record['drink_id']] = $drink_count;
