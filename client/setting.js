@@ -1,3 +1,14 @@
+$(document).on('click', '#add_vm', function() {
+  $.post("/lessons/a_vending_machine/server/addVm.php",
+    { "userEncrypt": $.cookie('userEncrypt'),
+      "vmType": $('[name = vmType]').val(),
+      "vmName": $('#vmName').val() },
+    function(data){
+      displayAddVmView();
+      $("#info").html(data);
+    });
+});
+
 $(document).on('click', '#addExistingDrink', function() {
   $.post("/lessons/a_vending_machine/server/addDrink.php",
     { "userEncrypt": $.cookie('userEncrypt'),
@@ -33,6 +44,31 @@ $(document).on('click', '#deleteDrink', function() {
     });
 });
 
+$(document).on('click', '#addDrink', function() {
+  $.post("/lessons/a_vending_machine/server/makeProduct.php",
+    { "userEncrypt": $.cookie('userEncrypt'),
+      "choicedVmId": $.cookie('choicedVmId'),
+      "drinkName": $('#drinkName').val(),
+      "drinkPrice": $('#drinkPrice').val() },
+    function(data){
+      displaySetDrinkView($.cookie('choicedVmId'));
+      $("#info").html(data);
+    });
+});
+
+$(document).on('click', '#changeProduct', function() {
+  $.post("/lessons/a_vending_machine/server/changeProduct.php",
+    { "userEncrypt": $.cookie('userEncrypt'),
+      "choicedVmId": $.cookie('choicedVmId'),
+      "changedProduct": $('[name = changedProduct]').val(),
+      "changeProductName": $('#changeProductName').val(),
+      "changeProductPrice": $('#changeProductPrice').val()},
+    function(data){
+      displaySetDrinkView($.cookie('choicedVmId'));
+      $("#info").html(data);
+    });
+});
+
 $(document).on('click', '#back_vm_top', function() {
   window.location.href = '/lessons/a_vending_machine/client/vm.html'
 });
@@ -42,7 +78,7 @@ $(document).on('click', '#back_vm_view', function() {
 });
 
 function displayAddVmView(){
-  $.post("/lessons/a_vending_machine/server/addVm.php",
+  $.post("/lessons/a_vending_machine/server/setVm.php",
         { },
         function(data){
           $("#view").html(data);

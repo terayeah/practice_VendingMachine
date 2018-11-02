@@ -19,7 +19,6 @@ $vm->setDrinkArray($db, $drink_in_vending_machine);
 $drinkArray = $vm->getDrinks();
 
 //$drinkTableArrayの作成
-$db = new PDO(PDO_DSN, DB_USERNAME, DB_PASSWORD);
 $drinkTableArray = array();
 $stmt = $db->query("select * from drink");
 $drinkInfo = $stmt->fetchAll(PDO::FETCH_ASSOC);

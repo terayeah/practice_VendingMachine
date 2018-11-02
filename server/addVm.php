@@ -1,8 +1,24 @@
 <?php
+require_once("./define.php");
+require_once("./VendingMachine.php");
+require_once("./User.php");
+require_once("./Drink.php");
 require_once("./tool.php");
+session_start();
 
-$html = displayAddVendingMachineButton();
+$db = new PDO(PDO_DSN, DB_USERNAME, DB_PASSWORD);
 
-$html .= "<button id='back_vm_top'>戻る</button></br>";
-echo $html;
- ?>
+$error = "";
+if($_POST['vmName'] == ""){
+  $error .= "自販機名を入力してください<br/>";
+}
+
+if($error != ""){
+  echo $error;
+  return;
+}
+
+$name = $_POST['vmName'];
+$type = $_POST['vmType'];
+$db->exec("insert into vending_machine (name, type) values ('" . $name . "', '" . $type . "')");
+echo "新規作成！<br/>";
