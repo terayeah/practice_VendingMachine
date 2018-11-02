@@ -34,14 +34,16 @@ $(document).on('click', '#changeDrink', function() {
 });
 
 $(document).on('click', '#deleteDrink', function() {
-  $.post("/lessons/a_vending_machine/server/deleteDrink.php",
-    { "userEncrypt": $.cookie('userEncrypt'),
-      "choicedVmId": $.cookie('choicedVmId'),
-      "deletedDrink": $('[name = deletedDrink]').val() },
-    function(data){
-      displaySetDrinkView($.cookie('choicedVmId'));
-      $("#info").html(data);
-    });
+  if(window.confirm("削除してよろしいですか？")){
+    $.post("/lessons/a_vending_machine/server/deleteDrink.php",
+      { "userEncrypt": $.cookie('userEncrypt'),
+        "choicedVmId": $.cookie('choicedVmId'),
+        "deletedDrink": $('[name = deletedDrink]').val() },
+      function(data){
+        displaySetDrinkView($.cookie('choicedVmId'));
+        $("#info").html(data);
+      });
+  }
 });
 
 $(document).on('click', '#addDrink', function() {

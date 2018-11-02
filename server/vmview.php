@@ -31,6 +31,20 @@ $stmt = $db->query("select * from vending_machine_drink where vending_machine_id
 $drink_in_vending_machine = $stmt->fetchAll(PDO::FETCH_ASSOC);
 $vm->setDrinkArray($db, $drink_in_vending_machine);
 
+if($vm->getDrinks() == array()){
+  $html .= "商品を追加してください</br>";
+  $html .= "<button id='setDrink'>商品を編集する</button></br>";
+
+  $rs = array(
+      "html" => $html,
+      "vmId" => htmlspecialchars($vmRecord[0]['id'])
+  );
+  header('Content-Type: application/json; charset=utf-8');
+  echo json_encode($rs);
+
+  return;
+}
+
 // ユーザーのドリンクアレイ取得
 $user->setDrinkArray($userId, $db);
 

@@ -17,6 +17,9 @@ $stmt = $db->query("select * from vending_machine_drink where vending_machine_id
 $drink_in_vending_machine = $stmt->fetchAll(PDO::FETCH_ASSOC);
 $vm->setDrinkArray($db, $drink_in_vending_machine);
 $drinkArray = $vm->getDrinks();
+if($drinkArray == null){
+  $drinkArray =array();
+}
 
 //$drinkTableArrayの作成
 $drinkTableArray = array();
