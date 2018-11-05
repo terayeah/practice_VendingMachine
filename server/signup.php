@@ -11,7 +11,6 @@ $isUpdated = false;
 if($_POST['newUsername'] !=  "" && $_POST['newPassword'] !=  ""){
   foreach($userInfo as $user){
     if($user['name'] == $_POST['newUsername']){
-      echo "そのユーザー名は使えません";
       $isUpdated = true;
     }
   }
@@ -19,6 +18,11 @@ if($_POST['newUsername'] !=  "" && $_POST['newPassword'] !=  ""){
     $salt = createSalt();
     $encrypted_password = crypt($_POST['newPassword'], $salt);
     $db->exec("insert into users (name, cash, suica, salt, encrypted_password) values ('" . $_POST['newUsername'] . "', 5000, 2000, '" . $salt . "', '" . $encrypted_password . "')");
-    echo "登録完了！";
   }
 }
+
+$rs = array(
+    "isUpdated" => $isUpdated
+);
+header('Content-Type: application/json; charset=utf-8');
+echo json_encode($rs);

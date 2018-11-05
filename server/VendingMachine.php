@@ -14,6 +14,7 @@ Class VendingMachine{
   private $total = 0;
   private $charge = 0;
   private $drinkArray = array();
+  private $drinkJsonArray = array();
   private $stockArray = array();
   private $id;
 
@@ -24,6 +25,10 @@ Class VendingMachine{
     $this->cash = $cash;
     $this->suica = $suica;
     $this->charge = $charge;
+  }
+
+  public function getJsonArray(){
+    return array("id"=>$this->getId(), "name"=>$this->getName(), "type"=>$this->getType(), "total"=>$this->getTotal(), "charge"=>$this->getCharge());
   }
 
   public function getName(){
@@ -130,21 +135,32 @@ Class VendingMachine{
         if($drink_record['id'] == $drink['drink_id']){
           $drink_name = $drink_record['name'];
           $drink_price = $drink_record['price'];
-          $drinkArray[$drink_id] = new Drink($drink_name, $drink_price);
+          $drink = new Drink($drink_name, $drink_price);
+          $drinkArray[$drink_id] = $drink;
+          $drinkJsonArray[$drink_id] = $drink->getJsonArray();
           $this->setStock($drink_name, $drink_stock);
           break;
         }
       }
     }
     $this->setDrinks($drinkArray);
+    $this->setDrinksJsonArray($drinkJsonArray);
   }
 
   public function setDrinks($drinkArray){
     $this->drinkArray = $drinkArray;
   }
 
+  public function setDrinksJsonArray($drinkJsonArray){
+    $this->drinkJsonArray = $drinkJsonArray;
+  }
+
   public function getDrinks(){
     return $this->drinkArray;
+  }
+
+  public function getDrinksJsonArray(){
+    return $this->drinkJsonArray;
   }
 
     public static function getVendingMachineFromName($vmArray, $name, $type){

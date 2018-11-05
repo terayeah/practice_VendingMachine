@@ -52,9 +52,7 @@ if(!$isUpdated){
     $drinkName,
     $drinkPrice
   );
-  $db->beginTransaction();
   $db->exec("insert into vending_machine_drink (vending_machine_id, drink_id, drink_count) values (" . $vm->getId() . ", " . $_POST["addedExistingDrink"] . ", " . $_POST["addDrinkCount"] . ")");
-  $db->commit();
   echo "追加しました！<br/>";
 }
 

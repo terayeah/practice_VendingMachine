@@ -33,6 +33,9 @@ class Drink{
     return $this->price;
   }
 
+  public function getJsonArray(){
+    return array("name"=>$this->getName(),"price"=>$this->getPrice());
+  }
 }
 
  ?>

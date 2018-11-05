@@ -12,14 +12,8 @@ $_SESSION[$userEncrypt] = $userId;
 $rs = array(
     "encrypted_password" => htmlspecialchars($userEncrypt)
 );
-$error = array('message' => htmlspecialchars("登録されていないユーザーです"),
-          'code' => htmlspecialchars(400)
-);
 
 if($userInfo != null){
   header('Content-Type: application/json; charset=utf-8');
   echo json_encode($rs);
-}else{
-  header('Content-Type: application/json; charset=utf-8');
-  echo json_encode($error);
 }

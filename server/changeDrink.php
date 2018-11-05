@@ -43,9 +43,7 @@ if(!$isChecked){
       $drink = $drinkTableArray[$_POST['changedDrink']];
       $drinkName = $drink->getName();
       $vm->setStock($drinkName, $_POST['changeDrinkStock']);
-      $db->beginTransaction();
       $db->exec("update vending_machine_drink set drink_count = " . $_POST['changeDrinkStock'] . " where vending_machine_id = " . $vm->getId() . " and drink_id = " . $drinkId);
-      $db->commit();
       echo "在庫を変更しました<br/>";
       break;
     }

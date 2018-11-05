@@ -28,9 +28,7 @@ foreach ($drinkArray as $drinkId => $drink) {
     $drinkName = $drink->getName();
     unset($drinkArray[$drinkId]);
     $vm->unsetDrinkStock($drinkName);
-    $db->beginTransaction();
     $db->exec("delete from vending_machine_drink where vending_machine_id = " . $vm->getId() . " and drink_id = " . $drinkId );
-    $db->commit();
     echo "削除完了！<br/>";
     break;
   }

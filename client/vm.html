@@ -9,11 +9,16 @@
   <h1>飲み物を買おう！</h1>
   <script type="text/javascript">
   $(function(){
-    if($.cookie('choicedVmId')){
-      displayVmView($.cookie('choicedVmId'));
+    if($.cookie('userEncrypt')){
+      if($.cookie('choicedVmId')){
+        displayVmView($.cookie('choicedVmId'));
+      }else{
+        displayVmTopView();
+      }
     }else{
-      displayVmTopView();
+      displayErrorView();
     }
+
 
   });
   </script>

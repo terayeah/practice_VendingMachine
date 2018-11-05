@@ -39,43 +39,23 @@ $stmt = $db->query("select * from user_drink where user_id = " . $userId);
 $user_drink = $stmt->fetchAll(PDO::FETCH_ASSOC);
 $user->setDrinkArray($db, $user_drink);
 
-if($vm->getDrinks() == array()){
-  $html .= "商品を追加してください</br>";
-  $html .= "<button id='setDrink'>商品を編集する</button></br>";
-  $html .= "<button id='back_vm_top'>戻る</button></br>";
-
-  $rs = array(
-      "html" => $html,
-      "vmId" => htmlspecialchars($vmRecord[0]['id'])
-  );
-  header('Content-Type: application/json; charset=utf-8');
-  echo json_encode($rs);
-
-  return;
+$user_drink_array = array();
+foreach ($user->getDrinkArray() as $drinkId => $howMany) {
+  foreach ($drinkInfo as $drink_record) {
+    if($drink_record['id'] == $drinkId){
+      $drinkName = $drink_record['name'];
+      $user_drink_array[$drinkName] = $howMany;
+    }
+  }
 }
 
-$html .= "<h3>自販機 : " . $vm->getName() . "</h3>";
-
-// headerの作成
-$html .= displayHeader($vm);
-// 入金フォームの作成
-$html .= displayCashSlot($vm);
-// チャージフォームの作成
-$html .= displaySuicaChargeMachine($vm);
-// ドリンクボタンの作成
-$html .= displayDrinkButton($vm);
-// suica購入ボタン
-$html .= displayBuyButton($vm);
-// footerの作成
-$html .= displayFooter($user, $drinkInfo);
-
-$html .= "<button id='setDrink'>商品を編集する</button></br>";
-
-$html .= "<button id='back_vm_top'>戻る</button></br>";
-
 $rs = array(
-    "html" => $html,
-    "vmId" => htmlspecialchars($vmRecord[0]['id'])
+    "vm" => $vm->getJsonArray(),
+    "user" => $user->getJsonArray(),
+    "vm_drink" => $vm->getDrinksJsonArray(),
+    "vm_stock" => $vm->getStock(),
+    "user_drink" => $user_drink_array
 );
+
 header('Content-Type: application/json; charset=utf-8');
 echo json_encode($rs);

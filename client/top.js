@@ -3,7 +3,7 @@ $(document).on('click','#login', function() {
 		{ "username": $("#username").val() },
 		function(data){
       if(data.encrypted_password == null){
-        $("#info").html(data.message);
+        $("#info").html("登録されていないユーザーです");
       }else{
         $.cookie('userEncrypt', data.encrypted_password);
         displayUserView();
@@ -16,7 +16,11 @@ $(document).on('click','#signup', function() {
   { "newUsername": $("#newUsername").val(),
     "newPassword": $("#newPassword").val() },
 		function(data){
-      $("#info").html(data);
+      if(data.isUpdated == true){
+        $("#info").html("すでに登録されているユーザー名です");
+      }else{
+        $("#info").html("data");
+      }
 		});
 });
 

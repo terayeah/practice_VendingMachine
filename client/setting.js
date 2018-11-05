@@ -38,7 +38,7 @@ $(document).on('click', '#deleteDrink', function() {
     $.post("/lessons/a_vending_machine/server/deleteDrink.php",
       { "userEncrypt": $.cookie('userEncrypt'),
         "choicedVmId": $.cookie('choicedVmId'),
-        "deletedDrink": $('[name = deletedDrink]').val() },
+        "deletedDrink": $('[name = changedDrink]').val() },
       function(data){
         displaySetDrinkView($.cookie('choicedVmId'));
         $("#info").html(data);
@@ -83,20 +83,106 @@ $(document).on('click', '#gologin', function() {
   window.location.href = '/lessons/a_vending_machine/client/top.html'
 });
 
-function displayAddVmView(){
-  $.post("/lessons/a_vending_machine/server/setVm.php",
-        {"userEncrypt": $.cookie('userEncrypt') },
-        function(data){
-          $("#view").html(data);
-        });
+function getDrinkOptions(drinkDic){
+  if(!drinkDic)
+    return null;
+
+  let body = "";
+  let drinkIds = Object.keys(drinkDic);
+  for(let i = 0; i < drinkIds.length; i++){
+    let drinkId = drinkIds[i];
+    let drink = drinkDic[drinkId];
+    body += "<option value=" + drinkId + ">" + drink.name + "¥" + drink.price + "</option>";
+  }
+  return body;
 }
 
-function displaySetDrinkView(vmId){
+function displayErrorView(){
+  let body = "ログインしてください<br/>";
+  body += "<button id='gologin'>ログインする</button>";
+  $("#view").html(body);
+}
+
+function displayAddVmView(){
+  let body = "<h4>追加フォーム</h4>";
+  body += "<select name='vmType'>";
+  body += "<option value='cash'>現金会計のみ</option>";
+  body += "<option value='suica'>Suica会計のみ</option>";
+  body += "<option value='both'>現金Suica両方会計</option>";
+  body += "<input type='text' id='vmName' placeholder='自販機名'>";
+  body += "<button id='add_vm'>追加</button>";
+  body += "<br>";
+
+  body += "<button id='back_vm_top'>戻る</button></br>";
+  $("#view").html(body);
+}
+
+function displaySetDrinkView(){
+
   $.post("/lessons/a_vending_machine/server/setDrink.php",
-		{ "userEncrypt": $.cookie('userEncrypt'),
-      "selectedVmId": vmId },
+		{ "selectedVmId": $.cookie('choicedVmId') },
 		function(data){
-      $.cookie('choicedVmId', data.vmId);
-      $("#view").html(data.html);
+      console.log(data);
+
+      let allDrinkOptions = getDrinkOptions(data.drinks.all);
+      let vendingMachineDrinkOptions = getDrinkOptions(data.drinks.vendingMachine);
+
+      let body = "";
+      body += "<h2>自販機 : " + data.name + "のドリンクを編集する</h2>";
+
+      // VendingMachineにドリンクを新規で追加する
+      body += "<h4>追加フォーム</h4>";
+      if(allDrinkOptions){
+        body += "<select name='addedExistingDrink'>";
+        body += allDrinkOptions;
+        body += "<input type='text' id='addDrinkCount' placeholder='個数'>";
+        body += "</select>";
+        body += "<button id='addExistingDrink'>追加</button>";
+        body += "<br>";
+      }else{
+        body += "ドリンクが登録されていません。";
+      }
+
+      // VendingMachineに既存のドリンクを追加または削除
+      body += "<h4>変更フォーム</h4>";
+      if(vendingMachineDrinkOptions){
+        body += "<select name='changedDrink'>";
+        body += vendingMachineDrinkOptions;
+        body += "<input type='number' id='changeDrinkStock' placeholder='変更個数'>";
+        body += "</select>";
+        body += "<button id='changeDrink'>変更</button>";
+        body += "<button id='deleteDrink'>削除</button>";
+        body += "<br>";
+    }else{
+      body += "VendingMachineに飲み物が存在しません。";
+    }
+
+    body += "<br>";
+    body += "<h2>商品開発をする</h2>";
+
+    // 新しいドリンクを追加する
+    body += "<h4>新規商品の開発</h4>";
+    body += "<input type='text' id='drinkName' placeholder='商品名'>";
+    body += "<input type='number' id='drinkPrice' placeholder='価格'>";
+    body += "<button id='addDrink'>追加</button>";
+    body += "<br>";
+
+    // 既存ドリンクの情報を変更する
+    body += "<h4>既存商品の改革</h4>";
+    if(allDrinkOptions){
+      body += "<select name='changedProduct'>";
+      body += allDrinkOptions;
+      body += "<input type='text' id='changeProductName' placeholder='変更名称'>";
+      body += "<input type='number' id='changeProductPrice' placeholder='変更価格'>";
+      body += "<button id='changeProduct'>変更</button>";
+      body += "</select>";
+      body += "<br>";
+    }else{
+      body += "ドリンクが登録されていません。";
+    }
+
+    body += "<button id='back_vm_view'>戻る</button></br>";
+
+    $("#view").html(body);
 		});
 }

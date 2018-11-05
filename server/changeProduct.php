@@ -25,15 +25,11 @@ foreach ($drinkTableArray as $drinkId => $drink) {
      break;
    }elseif(!$_POST['changeProductName'] && $_POST['changeProductPrice']){
      echo "価格を変更しました<br/>";
-     $db->beginTransaction();
      $db->exec("update drink set price = " . $_POST['changeProductPrice'] . " where id = " . $drinkId);
-     $db->commit();
      break;
    }elseif($_POST['changeProductName'] && !$_POST['changeProductPrice']){
      echo "名称を変更しました<br/>";
-     $db->beginTransaction();
      $db->exec("update drink set name = '" . $_POST['changeProductName'] . "' where id = " . $drinkId);
-     $db->commit();
      break;
    }else{
      echo "変更がありません<br/>";

@@ -20,7 +20,5 @@ if(!$error == ""){
   echo $error;
   return;
 }
-$db->beginTransaction();
 $db->exec("insert into drink (name, price) values ('" . $_POST["drinkName"] . "', " . $_POST["drinkPrice"] . ")");
-$db->commit();
 echo "新規作成！<br/>";

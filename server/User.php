@@ -18,6 +18,11 @@ class User{
     $this->drinkArray = $drinkArray;
   }
 
+
+  public function getJsonArray(){
+    return array("name"=>$this->getName(), "cash"=>$this->getCash(), "suica"=>$this->getSuica());
+  }
+
   public function getName(){
     return $this->name;
   }
