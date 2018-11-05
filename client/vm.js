@@ -110,7 +110,7 @@ function displayVmTopView(){
 
             $("#view").html(body);
           }else{
-            let body;
+            let body = "";
 
             body += "<button id='addVm'>自販機を追加する</button><br/>";
             body += "<br>";
@@ -202,7 +202,7 @@ function displayVmView(vmId){
 
         $("#view2").html(body);
       }else{
-        let body;
+        let body = "";
         body += "商品を追加してください</br>";
         body += "<button id='setDrink'>商品を編集する</button></br>";
         $("#view2").html(body);
