@@ -1,11 +1,5 @@
-$(document).on('click','.selectedVm', function() {
+$(document).on('click','#selectedVm', function() {
   displayVmView($(this).val());
-});
-
-$(document).on('click', '#back_vm_top', function() {
-  $.removeCookie('choicedVmId');
-  displayVmTopView();
-  $("#info").html("");
 });
 
 $(document).on('click', '#putCash', function() {
@@ -37,7 +31,7 @@ $(document).on('click', '#backChange', function() {
     });
 });
 
-$(document).on('click', '.selectedDrink', function() {
+$(document).on('click', '#selectedDrink', function() {
   $.post("/lessons/a_vending_machine/server/selectedDrink.php",
     { "userEncrypt": $.cookie('userEncrypt'),
       "choicedVmId": $.cookie('choicedVmId'),
@@ -93,13 +87,13 @@ function displayVmTopView(){
               let vmId = vmIds[i];
               let vm = data.vmArray[vmId];
               if (vm.type == "cash"){
-                cashButton += "<button class='selectedVm' value='" + vmId + "'>" + vm.name + "</button></br>";
+                cashButton += "<button id='selectedVm' value='" + vmId + "'>" + vm.name + "</button></br>";
               }
               if (vm.type == "suica"){
-                suicaButton += "<button class='selectedVm' value='" + vmId + "'>" + vm.name + "</button></br>";
+                suicaButton += "<button id='selectedVm' value='" + vmId + "'>" + vm.name + "</button></br>";
               }
               if (vm.type == "both"){
-                bothButton += "<button class='selectedVm' value='" + vmId + "'>" + vm.name + "</button></br>";
+                bothButton += "<button id='selectedVm' value='" + vmId + "'>" + vm.name + "</button></br>";
               }
             }
             body += "<h3>現金会計のみの自販機</h3>";
@@ -109,7 +103,7 @@ function displayVmTopView(){
             body += "<h3>現金とSuica両方会計の自販機</h3>";
             body += bothButton;
             body += "<br>";
-            body += "<button id='addVm'>自販機を追加する</button>";
+            body += "<button id='addVm'>自販機を追加する</button><br/>";
             body += "<br>";
             body += "<button id='logout'>サインアウト</button>";
 
@@ -118,11 +112,11 @@ function displayVmTopView(){
           }else{
             let body;
 
-            body += "<button id='addVm'>自販機を追加する</button>";
+            body += "<button id='addVm'>自販機を追加する</button><br/>";
             body += "<br>";
             body += "<button id='logout'>サインアウト</button>";
 
-            $("#html").html(body);
+            $("#view").html(body);
             $("#info").html("自販機を追加してください");
           }
         });
@@ -183,9 +177,9 @@ function displayVmView(vmId){
           let drinkId = drinkIds[i];
           let drink = data.vm_drink[drinkId];
           if(data.vm_stock[drink.name] > 0){
-            body += "<button class='selectedDrink' value='" + drinkId + "'>" + drink.name + " ¥ " + drink.price + "</button>";
+            body += "<button id='selectedDrink' value='" + drinkId + "'>" + drink.name + " ¥ " + drink.price + "</button>";
           }else{
-            body += "<button class='selectedLossDrink' value='" + drinkId + "'>" + drink.name + " 売り切れ </button>";
+            body += "<button id='selectedLossDrink' value='" + drinkId + "'>" + drink.name + " 売り切れ </button>";
           }
         }
         body += "<br/>";
@@ -202,18 +196,16 @@ function displayVmView(vmId){
         body += "<li>現在のチャージ額 : ¥" + data.user.suica + "</li>";
         body += "<li>持ってる飲み物 : ";
         body += userDrinkStock
-        body += "</li></ul><br>";
+        body += "</li></ul>";
 
         body += "<button id='setDrink'>商品を編集する</button></br>";
-        body += "<button id='back_vm_top'>戻る</button></br>";
 
-        $("#view").html(body);
+        $("#view2").html(body);
       }else{
         let body;
         body += "商品を追加してください</br>";
         body += "<button id='setDrink'>商品を編集する</button></br>";
-        body += "<button id='back_vm_top'>戻る</button></br>";
-        $("#view").html(body);
+        $("#view2").html(body);
       }
 
 		});

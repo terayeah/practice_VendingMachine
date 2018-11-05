@@ -28,7 +28,11 @@ Class VendingMachine{
   }
 
   public function getJsonArray(){
-    return array("id"=>$this->getId(), "name"=>$this->getName(), "type"=>$this->getType(), "total"=>$this->getTotal(), "charge"=>$this->getCharge());
+    return array("id"=>$this->getId(),
+                 "name"=>$this->getName(),
+                 "type"=>$this->getType(),
+                 "total"=>$this->getTotal(),
+                 "charge"=>$this->getCharge());
   }
 
   public function getName(){

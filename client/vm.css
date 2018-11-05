@@ -1,0 +1,12 @@
+#view{
+  float:left;
+}
+
+#view2{
+  float:right;
+  margin-right: 200px;
+}
+
+#info{
+  clear:both;
+}

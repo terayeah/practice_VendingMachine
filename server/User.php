@@ -20,7 +20,9 @@ class User{
 
 
   public function getJsonArray(){
-    return array("name"=>$this->getName(), "cash"=>$this->getCash(), "suica"=>$this->getSuica());
+    return array("name"=>$this->getName(),
+                 "cash"=>$this->getCash(),
+                 "suica"=>$this->getSuica());
   }
 
   public function getName(){
