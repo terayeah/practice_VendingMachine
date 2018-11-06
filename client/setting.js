@@ -72,6 +72,13 @@ $(document).on('click', '#back_vm_view', function() {
   displayVmView($.cookie('choicedVmId'));
 });
 
+$(document).on('click', '#cover', function() {
+  $("#view3").css("display", "none");
+  $("#cover").css("display", "none");
+  displayVmTopView();
+  displayVmView($.cookie('choicedVmId'));
+});
+
 $(document).on('click', '#gologin', function() {
   window.location.href = '/lessons/a_vending_machine/client/top.html'
 });
