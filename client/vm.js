@@ -53,11 +53,31 @@ $(document).on('click', '#buySuica', function() {
 });
 
 $(document).on('click', '#addVm', function() {
-  window.location.href = '/lessons/a_vending_machine/client/setting.html'
+  displayAddVmView();
+  $("#view3").css("display","block");
+  $("#cover").css("background-color","grey")
+             .css("position", "absolute")
+             .css("z-index","800")
+             .css("top", "0px")
+             .css("left", "0px")
+             .css("right", "0px")
+             .css("bottom", "0px")
+             .css("opacity", "0.8")
+             .css("display", "block");
 });
 
 $(document).on('click', '#setDrink', function() {
-  window.location.href = '/lessons/a_vending_machine/client/setting.html'
+  displaySetDrinkView();
+  $("#view3").css("display","block");
+  $("#cover").css("background-color","grey")
+             .css("position", "absolute")
+             .css("z-index","800")
+             .css("top", "0px")
+             .css("left", "0px")
+             .css("right", "0px")
+             .css("bottom", "0px")
+             .css("opacity", "0.8")
+             .css("display", "block");
 });
 
 $(document).on('click', '#logout', function() {
@@ -122,7 +142,7 @@ function displayVmTopView(){
         });
 }
 
-function getDrinkOptions(drinkDic){
+function getdrinkOptions(drinkDic){
   if(!drinkDic)
     return null;
 
@@ -147,15 +167,15 @@ function displayVmView(vmId){
 
       if(data.vm_drink){
         let body = "";
-        let drinkStock = getDrinkOptions(data.vm_stock);
-        let userDrinkStock = getDrinkOptions(data.user_drink);
+        let vmdrinkStock = getdrinkOptions(data.vm_stock);
+        let userdrinkStock = getdrinkOptions(data.user_drink);
         // header
         body += "<h3>自販機 : " + data.vm.name + "</h3>";
         body += '<ul>';
         body += "<li>自販機売上額 : ¥" + data.vm.total + " </li>";
         body += "<li>現在の入金額 : ¥" + data.vm.charge + "</li>";
         body += "<li>在庫 ";
-        body += drinkStock;
+        body += vmdrinkStock;
         body += '</li></ul><br>';
 
         // 入金フォーム
@@ -195,7 +215,7 @@ function displayVmView(vmId){
         body += "<li>現在の所持金 : ¥" + data.user.cash + "</li>";
         body += "<li>現在のチャージ額 : ¥" + data.user.suica + "</li>";
         body += "<li>持ってる飲み物 : ";
-        body += userDrinkStock
+        body += userdrinkStock
         body += "</li></ul>";
 
         body += "<button id='setDrink'>商品を編集する</button></br>";

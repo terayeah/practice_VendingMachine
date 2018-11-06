@@ -4,8 +4,7 @@ $(document).on('click', '#add_vm', function() {
       "vmType": $('[name = vmType]').val(),
       "vmName": $('#vmName').val() },
     function(data){
-      displayAddVmView();
-      $("#info").html(data);
+      displayAddVmView(data);
     });
 });
 
@@ -16,8 +15,7 @@ $(document).on('click', '#addExistingDrink', function() {
       "addedExistingDrink": $('[name = addedExistingDrink]').val(),
       "addDrinkCount": $('#addDrinkCount').val() },
     function(data){
-      displaySetDrinkView($.cookie('choicedVmId'));
-      $("#info").html(data);
+      displaySetDrinkView(data);
     });
 });
 
@@ -28,8 +26,7 @@ $(document).on('click', '#changeDrink', function() {
       "changedDrink": $('[name = changedDrink]').val(),
       "changeDrinkStock": $('#changeDrinkStock').val() },
     function(data){
-      displaySetDrinkView($.cookie('choicedVmId'));
-      $("#info").html(data);
+      displaySetDrinkView(data);
     });
 });
 
@@ -40,8 +37,7 @@ $(document).on('click', '#deleteDrink', function() {
         "choicedVmId": $.cookie('choicedVmId'),
         "deletedDrink": $('[name = changedDrink]').val() },
       function(data){
-        displaySetDrinkView($.cookie('choicedVmId'));
-        $("#info").html(data);
+        displaySetDrinkView(data);
       });
   }
 });
@@ -53,8 +49,7 @@ $(document).on('click', '#addDrink', function() {
       "drinkName": $('#drinkName').val(),
       "drinkPrice": $('#drinkPrice').val() },
     function(data){
-      displaySetDrinkView($.cookie('choicedVmId'));
-      $("#info").html(data);
+      displaySetDrinkView(data);
     });
 });
 
@@ -66,17 +61,15 @@ $(document).on('click', '#changeProduct', function() {
       "changeProductName": $('#changeProductName').val(),
       "changeProductPrice": $('#changeProductPrice').val()},
     function(data){
-      displaySetDrinkView($.cookie('choicedVmId'));
-      $("#info").html(data);
+      displaySetDrinkView(data);
     });
 });
 
-$(document).on('click', '#back_vm_top', function() {
-  window.location.href = '/lessons/a_vending_machine/client/vm.html'
-});
-
 $(document).on('click', '#back_vm_view', function() {
-  window.location.href = '/lessons/a_vending_machine/client/vm.html'
+  $("#view3").css("display", "none");
+  $("#cover").css("display", "none");
+  displayVmTopView();
+  displayVmView($.cookie('choicedVmId'));
 });
 
 $(document).on('click', '#gologin', function() {
@@ -103,7 +96,7 @@ function displayErrorView(){
   $("#view").html(body);
 }
 
-function displayAddVmView(){
+function displayAddVmView(info2 = ""){
   let body = "<h4>追加フォーム</h4>";
   body += "<select name='vmType'>";
   body += "<option value='cash'>現金会計のみ</option>";
@@ -113,12 +106,12 @@ function displayAddVmView(){
   body += "<button id='add_vm'>追加</button>";
   body += "<br>";
 
-  body += "<button id='back_vm_top'>戻る</button></br>";
-  $("#view").html(body);
+  body += "<button id='back_vm_view'>閉じる</button></br>";
+  body += "<div id='info2'>" + info2 + "</div>";
+  $("#view3").html(body);
 }
 
-function displaySetDrinkView(){
-
+function displaySetDrinkView(info2 = ""){
   $.post("/lessons/a_vending_machine/server/setDrink.php",
 		{ "selectedVmId": $.cookie('choicedVmId') },
 		function(data){
@@ -181,8 +174,8 @@ function displaySetDrinkView(){
       body += "ドリンクが登録されていません。";
     }
 
-    body += "<button id='back_vm_view'>戻る</button></br>";
-
-    $("#view").html(body);
+    body += "<button id='back_vm_view'>閉じる</button></br>";
+    body += "<div id='info2'>" + info2 + "</div>";
+    $("#view3").html(body);
 		});
 }
