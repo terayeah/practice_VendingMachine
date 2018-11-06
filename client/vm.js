@@ -106,13 +106,13 @@ function displayVmTopView(){
             for(let i = 0; i < vmIds.length; i++){
               let vmId = vmIds[i];
               let vm = data.vmArray[vmId];
-              if (vm.type == "cash"){
+              if (vm.type == vm_type_cash){
                 cashButton += "<button id='selectedVm' value='" + vmId + "'>" + vm.name + "</button></br>";
               }
-              if (vm.type == "suica"){
+              if (vm.type == vm_type_suica){
                 suicaButton += "<button id='selectedVm' value='" + vmId + "'>" + vm.name + "</button></br>";
               }
-              if (vm.type == "both"){
+              if (vm.type == vm_type_both){
                 bothButton += "<button id='selectedVm' value='" + vmId + "'>" + vm.name + "</button></br>";
               }
             }
@@ -179,14 +179,14 @@ function displayVmView(vmId){
         body += '</li></ul><br>';
 
         // 入金フォーム
-        if (data.vm.type == "cash" || data.vm.type == "both"){
+        if (data.vm.type == vm_type_cash || data.vm.type == vm_type_both){
           body += "<input type='text' id='howMuchCash' placeholder='金額を記入'>";
           body += "<button id='putCash'>入金</button>";
           body += "<button id='backChange'>お釣り</button>";
           body += "<br>";
         }
         // suicaフォーム
-        if (data.vm.type == "suica" || data.vm.type == "both"){
+        if (data.vm.type == vm_type_suica || data.vm.type == vm_type_both){
           body += "<input type='text' id='howMuchSuica' placeholder='Suicaへのチャージ額を記入'>";
           body += "<button id='charge'>チャージ</button>";
           body += "<br>";
@@ -205,7 +205,7 @@ function displayVmView(vmId){
         body += "<br/>";
 
         // suica購入ボタン
-        if (data.vm.type == "suica" || data.vm.type == "both"){
+        if (data.vm.type == vm_type_suica || data.vm.type == vm_type_both){
           body += "<button id='buySuica'>購入</button>";
           body += "<br>";
         }
