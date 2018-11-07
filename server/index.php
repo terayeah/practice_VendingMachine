@@ -34,7 +34,11 @@ switch ($controller) {
 						response_json($result);
 					}
 					break;
-				case 'addcount':
+				case 'putCash':
+          UserController::putCash($_POST['userEncrypt'], $_POST["howMuchCash"]);
+					break;
+        case 'backChange':
+          UserController::backChange($_POST['userEncrypt']);
 					break;
 			}
 		break;
@@ -49,13 +53,14 @@ switch ($controller) {
 						response_json($result);
 					}
 					break;
-				case 'login':
-          $result = UserController::login($_POST['username']);
+				case 'drowvmview':
+          $result = VendingMachineController::drowvmview($_POST['userEncrypt'], $_POST['selectedVmId']);
           if($result != null){
 						response_json($result);
 					}
 					break;
-				case 'addcount':
+				case '':
+
 					break;
 			}
 		break;

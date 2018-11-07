@@ -3,9 +3,8 @@ $(document).on('click','#selectedVm', function() {
 });
 
 $(document).on('click', '#putCash', function() {
-  $.post("/lessons/a_vending_machine/server/putCash.php",
+  $.post("/lessons/a_vending_machine/user/putCash",
     { "userEncrypt": $.cookie('userEncrypt'),
-      "choicedVmId": $.cookie('choicedVmId'),
       "howMuchCash": $('#howMuchCash').val() },
     function(){
       displayVmView($.cookie('choicedVmId'));
@@ -23,9 +22,8 @@ $(document).on('click', '#charge', function() {
 });
 
 $(document).on('click', '#backChange', function() {
-  $.post("/lessons/a_vending_machine/server/backChange.php",
-    { "userEncrypt": $.cookie('userEncrypt'),
-      "choicedVmId": $.cookie('choicedVmId') },
+  $.post("/lessons/a_vending_machine/user/backChange",
+    { "userEncrypt": $.cookie('userEncrypt') },
     function(){
       displayVmView($.cookie('choicedVmId'));
     });
@@ -157,7 +155,7 @@ function getdrinkOptions(drinkDic){
 }
 
 function displayVmView(vmId){
-  $.post("/lessons/a_vending_machine/server/vmview.php",
+  $.post("/lessons/a_vending_machine/vendingmachine/drowvmview",
 		{ "userEncrypt": $.cookie('userEncrypt'),
       "selectedVmId": vmId },
 		function(data){

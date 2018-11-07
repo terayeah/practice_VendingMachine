@@ -43,6 +43,26 @@ class UserController{
     );
   }
 
+  public static function putCash($userEncrypt, $howMuchCash){
+    $db = new PDO(PDO_DSN, DB_USERNAME, DB_PASSWORD);
+
+    $userId = $_SESSION[$userEncrypt];
+    $vm = $_SESSION[$userId . 'SES_KEY_VM'];
+    $user = $_SESSION[$userId . 'SES_KEY_USER'];
+
+    $vm->putCash($user, $howMuchCash, $db);
+  }
+
+  public static function backChange($userEncrypt){
+    $db = new PDO(PDO_DSN, DB_USERNAME, DB_PASSWORD);
+
+    $userId = $_SESSION[$userEncrypt];
+    $vm = $_SESSION[$userId . 'SES_KEY_VM'];
+    $user = $_SESSION[$userId . 'SES_KEY_USER'];
+
+    $vm->backChange($user, $db);
+  }
+
 
 
 
