@@ -93,7 +93,7 @@ function displayErrorView(){
 }
 
 function displayVmTopView(){
-  $.post("/lessons/a_vending_machine/server/vmtop.php",
+  $.post("/lessons/a_vending_machine/vendingmachine/drowvmtop",
         { "userEncrypt": $.cookie('userEncrypt') },
         function(data){
           console.log(data);

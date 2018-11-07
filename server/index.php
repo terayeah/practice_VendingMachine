@@ -1,5 +1,10 @@
 <?php
 require_once("UserController.php");
+require_once("VendingMachineController.php");
+require_once("VendingMachine.php");
+require_once("User.php");
+require_once("Drink.php");
+session_start();
 
 $uriParts = explode('/',$_SERVER['REQUEST_URI']);
 @array_shift($uriParts);
@@ -24,9 +29,34 @@ switch ($controller) {
 					}
 					break;
 				case 'login':
+          $result = UserController::login($_POST['username']);
+          if($result != null){
+						response_json($result);
+					}
 					break;
 				case 'addcount':
 					break;
 			}
-			break;
-	}
+		break;
+}
+
+switch ($controller) {
+		case 'vendingmachine':
+			switch ($action) {
+				case 'drowvmtop':
+          $result = VendingMachineController::drowvmtop($_POST['userEncrypt']);
+          if($result != null){
+						response_json($result);
+					}
+					break;
+				case 'login':
+          $result = UserController::login($_POST['username']);
+          if($result != null){
+						response_json($result);
+					}
+					break;
+				case 'addcount':
+					break;
+			}
+		break;
+}

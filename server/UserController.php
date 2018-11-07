@@ -3,16 +3,6 @@ require_once("define.php");
 
 class UserController{
 
-  static function isQuerrySuccess($result){
-  if ($result === false) {
-    return false;
-  }
-  if(count($result) != 1){
-    return false;
-  }
-  return true;
-  }
-
   public static function signup($newUsername, $newPassword){
     $db = new PDO(PDO_DSN, DB_USERNAME, DB_PASSWORD);
     $stmt = $db->query("select * from users");
@@ -40,7 +30,23 @@ class UserController{
     );
   }
 
-  public static function login(){
+  public static function login($username){
     $db = new PDO(PDO_DSN, DB_USERNAME, DB_PASSWORD);
+    $stmt = $db->query("select * from users where name = '" . $username . "'");
+    $userInfo = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $userId = $userInfo[0]['id'];
+    $userEncrypt = $userInfo[0]['encrypted_password'];
+    $_SESSION[$userEncrypt] = $userId;
+
+    return array(
+        "encrypted_password" => htmlspecialchars($userEncrypt)
+    );
   }
+
+
+
+
+
+
+
 }
