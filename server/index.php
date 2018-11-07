@@ -1,6 +1,7 @@
 <?php
 require_once("UserController.php");
 require_once("VendingMachineController.php");
+require_once("DrinkController.php");
 require_once("VendingMachine.php");
 require_once("User.php");
 require_once("Drink.php");
@@ -68,8 +69,36 @@ switch ($controller) {
 						response_json($result);
 					}
 					break;
-				case '':
+				case 'setDrink':
+          $result = VendingMachineController::setDrink($_POST['selectedVmId']);
+          if($result != null){
+						response_json($result);
+					}
+					break;
+        case 'addVm':
+          VendingMachineController::addVm($_POST['vmType'], $_POST['vmName']);
+					break;
+        case 'addDrink':
+          VendingMachineController::addDrink($_POST['userEncrypt'], $_POST['addedExistingDrink'], $_POST['addDrinkCount']);
+					break;
+        case 'changeDrink':
+          VendingMachineController::changeDrink($_POST['userEncrypt'], $_POST['changedDrink'], $_POST['changeDrinkStock']);
+					break;
+        case 'deleteDrink':
+          VendingMachineController::deleteDrink($_POST['userEncrypt'], $_POST['deletedDrink']);
+					break;
+			}
+		break;
+}
 
+switch ($controller) {
+		case 'drink':
+			switch ($action) {
+				case 'makeProduct':
+          DrinkController::makeProduct($_POST['drinkName'], $_POST['drinkPrice']);
+					break;
+        case 'changeProduct':
+          DrinkController::changeProduct($_POST['changedProduct'], $_POST['changeProductName'], $_POST['changeProductPrice']);
 					break;
 			}
 		break;

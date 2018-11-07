@@ -1,7 +1,6 @@
 $(document).on('click', '#add_vm', function() {
-  $.post("/lessons/a_vending_machine/server/addVm.php",
-    { "userEncrypt": $.cookie('userEncrypt'),
-      "vmType": $('[name = vmType]').val(),
+  $.post("/lessons/a_vending_machine/vendingmachine/addVm",
+    { "vmType": $('[name = vmType]').val(),
       "vmName": $('#vmName').val() },
     function(data){
       displayAddVmView(data);
@@ -9,9 +8,8 @@ $(document).on('click', '#add_vm', function() {
 });
 
 $(document).on('click', '#addExistingDrink', function() {
-  $.post("/lessons/a_vending_machine/server/addDrink.php",
+  $.post("/lessons/a_vending_machine/vendingmachine/addDrink",
     { "userEncrypt": $.cookie('userEncrypt'),
-      "choicedVmId": $.cookie('choicedVmId'),
       "addedExistingDrink": $('[name = addedExistingDrink]').val(),
       "addDrinkCount": $('#addDrinkCount').val() },
     function(data){
@@ -20,9 +18,8 @@ $(document).on('click', '#addExistingDrink', function() {
 });
 
 $(document).on('click', '#changeDrink', function() {
-  $.post("/lessons/a_vending_machine/server/changeDrink.php",
+  $.post("/lessons/a_vending_machine/vendingmachine/changeDrink",
     { "userEncrypt": $.cookie('userEncrypt'),
-      "choicedVmId": $.cookie('choicedVmId'),
       "changedDrink": $('[name = changedDrink]').val(),
       "changeDrinkStock": $('#changeDrinkStock').val() },
     function(data){
@@ -32,9 +29,8 @@ $(document).on('click', '#changeDrink', function() {
 
 $(document).on('click', '#deleteDrink', function() {
   if(window.confirm("削除してよろしいですか？")){
-    $.post("/lessons/a_vending_machine/server/deleteDrink.php",
+    $.post("/lessons/a_vending_machine/vendingmachine/deleteDrink",
       { "userEncrypt": $.cookie('userEncrypt'),
-        "choicedVmId": $.cookie('choicedVmId'),
         "deletedDrink": $('[name = changedDrink]').val() },
       function(data){
         displaySetDrinkView(data);
@@ -43,10 +39,8 @@ $(document).on('click', '#deleteDrink', function() {
 });
 
 $(document).on('click', '#addDrink', function() {
-  $.post("/lessons/a_vending_machine/server/makeProduct.php",
-    { "userEncrypt": $.cookie('userEncrypt'),
-      "choicedVmId": $.cookie('choicedVmId'),
-      "drinkName": $('#drinkName').val(),
+  $.post("/lessons/a_vending_machine/drink/makeProduct",
+    { "drinkName": $('#drinkName').val(),
       "drinkPrice": $('#drinkPrice').val() },
     function(data){
       displaySetDrinkView(data);
@@ -54,10 +48,8 @@ $(document).on('click', '#addDrink', function() {
 });
 
 $(document).on('click', '#changeProduct', function() {
-  $.post("/lessons/a_vending_machine/server/changeProduct.php",
-    { "userEncrypt": $.cookie('userEncrypt'),
-      "choicedVmId": $.cookie('choicedVmId'),
-      "changedProduct": $('[name = changedProduct]').val(),
+  $.post("/lessons/a_vending_machine/drink/changeProduct",
+    { "changedProduct": $('[name = changedProduct]').val(),
       "changeProductName": $('#changeProductName').val(),
       "changeProductPrice": $('#changeProductPrice').val()},
     function(data){
@@ -119,7 +111,7 @@ function displayAddVmView(info2 = ""){
 }
 
 function displaySetDrinkView(info2 = ""){
-  $.post("/lessons/a_vending_machine/server/setDrink.php",
+  $.post("/lessons/a_vending_machine/vendingmachine/setDrink",
 		{ "selectedVmId": $.cookie('choicedVmId') },
 		function(data){
       console.log(data);

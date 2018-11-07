@@ -78,4 +78,170 @@ class VendingMachineController{
         "user_drink" => $user_drink_array
     );
   }
+
+  public static function setDrink($selectedVmId){
+    $db = new PDO(PDO_DSN, DB_USERNAME, DB_PASSWORD);
+    // 選択した自販機の取得
+    $stmt = $db->query("select * from vending_machine where id = " . $selectedVmId);
+    $vmRecord = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $vm = new VendingMachine($vmRecord[0]['id'], $vmRecord[0]['name'], $vmRecord[0]['type'], $vmRecord[0]['cash'], $vmRecord[0]['suica'], $vmRecord[0]['charge']);
+
+    // 自販機のdrinkArray,stockArrayの取得
+    $stmt = $db->query("select * from vending_machine_drink where vending_machine_id = " . $vm->getId());
+    $drink_in_vending_machine = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $vm->setDrinkArray($db, $drink_in_vending_machine);
+    $drinkArray = $vm->getDrinksJsonArray();
+
+    //$drinkTableArrayの作成
+    $drinkTableArray = array();
+    $stmt = $db->query("select * from drink");
+    $drinkInfo = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $_SESSION['drinkInfo'] = $drinkInfo;
+
+    foreach ($drinkInfo as $value) {
+      $drink = new Drink($value['name'], $value['price']);
+      $drinkTableArray[$value['id']] = $drink->getJsonArray();
+    }
+
+    return array(
+        "name" => $vm->getName(),
+        "drinks" => array(
+          "vendingMachine"=>$drinkArray,
+          "all"=>$drinkTableArray
+        )
+    );
+  }
+
+  public static function addVm($vmType, $vmName){
+    $db = new PDO(PDO_DSN, DB_USERNAME, DB_PASSWORD);
+    $error = "";
+    if($_POST['vmName'] == ""){
+      $error .= "自販機名を入力してください<br/>";
+    }
+    if($error != ""){
+      echo $error;
+      return;
+    }
+    $name = $vmName;
+    $type = $vmType;
+    $db->exec("insert into vending_machine (name, type) values ('" . $name . "', '" . $type . "')");
+    echo "新規作成！<br/>";
+  }
+
+  public static function addDrink($userEncrypt, $addedExistingDrink, $addDrinkCount){
+    // 選択した自販機の取得
+    $db = new PDO(PDO_DSN, DB_USERNAME, DB_PASSWORD);
+    $userId = $_SESSION[$userEncrypt];
+    $vm = $_SESSION[$userId . 'SES_KEY_VM'];
+    // 自販機のdrinkArray,stockArrayの取得
+    $drink_in_vending_machine = $_SESSION[$userId . 'SES_KEY_VM_DRINK_RECORD'];
+    $vm->setDrinkArray($db, $drink_in_vending_machine);
+    $drinkArray = $vm->getDrinks();
+    if($drinkArray == null){
+      $drinkArray = array();
+    }
+    //$drinkTableArrayの作成
+    $drinkTableArray = array();
+    $drinkInfo = $_SESSION['drinkInfo'];
+    foreach ($drinkInfo as $value) {
+      $drinkTableArray[$value['id']] = new Drink($value['name'], $value['price']);
+    }
+    $error = "";
+    if($addDrinkCount == ""){
+      $error .= "個数を入力してください<br/>";
+    }
+    if(!$error == ""){
+      echo $error;
+      return;
+    }
+    $isUpdated = false;
+    foreach ($drinkArray as $drinkId => $drink) {
+      if($drinkId == $addedExistingDrink){
+        echo "すでに同じ商品が存在しています！変更の場合は変更フォームを利用してください<br/>";
+        $isUpdated = true;
+        break;
+      }
+    }
+    if(!$isUpdated){
+      $drink = $drinkTableArray[$addedExistingDrink];
+      $drinkName = $drink->getName();
+      $drinkPrice = $drink->getPrice();
+      $drinkArray[$addedExistingDrink] = new Drink(
+        $drinkName,
+        $drinkPrice
+      );
+      $db->exec("insert into vending_machine_drink (vending_machine_id, drink_id, drink_count) values (" . $vm->getId() . ", " . $addedExistingDrink . ", " . $addDrinkCount . ")");
+      echo "追加しました！<br/>";
+    }
+  }
+
+  public static function changeDrink($userEncrypt, $changedDrink, $changeDrinkStock){
+    $db = new PDO(PDO_DSN, DB_USERNAME, DB_PASSWORD);
+    $userId = $_SESSION[$userEncrypt];
+    $vm = $_SESSION[$userId . 'SES_KEY_VM'];
+    // 自販機のdrinkArray,stockArrayの取得
+    $drink_in_vending_machine = $_SESSION[$userId . 'SES_KEY_VM_DRINK_RECORD'];
+    $vm->setDrinkArray($db, $drink_in_vending_machine);
+    $drinkArray = $vm->getDrinks();
+    //$drinkTableArrayの作成
+    $drinkTableArray = array();
+    $drinkInfo = $_SESSION['drinkInfo'];
+    foreach ($drinkInfo as $value) {
+      $drinkTableArray[$value['id']] = new Drink($value['name'], $value['price']);
+    }
+    $error = "";
+    if($changeDrinkStock == ""){
+      $error .= "個数を入力してください<br/>";
+    }
+    if(!$error == ""){
+      echo $error;
+      return;
+    }
+    $isChecked = false;
+    if($changeDrinkStock == null){
+      echo "変更がありません<br/>";
+      $isChecked = true;
+    }
+    if(!$isChecked){
+      foreach ($drinkArray as $drinkId => $drink) {
+        if($drinkId == $changedDrink){
+          $drink = $drinkTableArray[$changedDrink];
+          $drinkName = $drink->getName();
+          $vm->setStock($drinkName, $changeDrinkStock);
+          $db->exec("update vending_machine_drink set drink_count = " . $changeDrinkStock . " where vending_machine_id = " . $vm->getId() . " and drink_id = " . $drinkId);
+          echo "在庫を変更しました<br/>";
+          break;
+        }
+      }
+    }
+  }
+
+  public static function deleteDrink($userEncrypt, $deletedDrink){
+    $db = new PDO(PDO_DSN, DB_USERNAME, DB_PASSWORD);
+    $userId = $_SESSION[$userEncrypt];
+    $vm = $_SESSION[$userId . 'SES_KEY_VM'];
+    // 自販機のdrinkArray,stockArrayの取得
+    $drink_in_vending_machine = $_SESSION[$userId . 'SES_KEY_VM_DRINK_RECORD'];
+    $vm->setDrinkArray($db, $drink_in_vending_machine);
+    $drinkArray = $vm->getDrinks();
+
+    //$drinkTableArrayの作成
+    $drinkTableArray = array();
+    $drinkInfo = $_SESSION['drinkInfo'];
+    foreach ($drinkInfo as $value) {
+      $drinkTableArray[$value['id']] = new Drink($value['name'], $value['price']);
+    }
+
+    foreach ($drinkArray as $drinkId => $drink) {
+      if($drinkId == $deletedDrink){
+        $drink = $drinkTableArray[$deletedDrink];
+        $drinkName = $drink->getName();
+        unset($drinkArray[$drinkId]);
+        $vm->unsetDrinkStock($drinkName);
+        $db->exec("delete from vending_machine_drink where vending_machine_id = " . $vm->getId() . " and drink_id = " . $drinkId );
+        echo "削除完了！<br/>";
+        break;
+      }
+    }
+  }
 }
