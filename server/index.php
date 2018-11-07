@@ -40,6 +40,15 @@ switch ($controller) {
         case 'backChange':
           UserController::backChange($_POST['userEncrypt']);
 					break;
+        case 'charge':
+          UserController::charge($_POST['userEncrypt'], $_POST["howMuchSuica"]);
+          break;
+        case 'selectedDrink':
+          UserController::selectedDrink($_POST['userEncrypt'], $_POST["selectedDrink"]);
+          break;
+        case 'buySuica':
+          UserController::buySuica($_POST['userEncrypt']);
+          break;
 			}
 		break;
 }

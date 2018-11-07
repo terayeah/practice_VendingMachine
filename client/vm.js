@@ -12,9 +12,8 @@ $(document).on('click', '#putCash', function() {
 });
 
 $(document).on('click', '#charge', function() {
-  $.post("/lessons/a_vending_machine/server/charge.php",
+  $.post("/lessons/a_vending_machine/user/charge",
     { "userEncrypt": $.cookie('userEncrypt'),
-      "choicedVmId": $.cookie('choicedVmId'),
       "howMuchSuica": $('#howMuchSuica').val() },
     function(){
       displayVmView($.cookie('choicedVmId'));
@@ -30,9 +29,8 @@ $(document).on('click', '#backChange', function() {
 });
 
 $(document).on('click', '#selectedDrink', function() {
-  $.post("/lessons/a_vending_machine/server/selectedDrink.php",
+  $.post("/lessons/a_vending_machine/user/selectedDrink",
     { "userEncrypt": $.cookie('userEncrypt'),
-      "choicedVmId": $.cookie('choicedVmId'),
       "selectedDrink": $(this).val()},
     function(data){
       displayVmView($.cookie('choicedVmId'));
@@ -41,9 +39,8 @@ $(document).on('click', '#selectedDrink', function() {
 });
 
 $(document).on('click', '#buySuica', function() {
-  $.post("/lessons/a_vending_machine/server/buySuica.php",
-    { "userEncrypt": $.cookie('userEncrypt'),
-      "choicedVmId": $.cookie('choicedVmId') },
+  $.post("/lessons/a_vending_machine/user/buySuica",
+    { "userEncrypt": $.cookie('userEncrypt') },
     function(data){
       displayVmView($.cookie('choicedVmId'));
       $("#info").html(data);

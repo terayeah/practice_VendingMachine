@@ -10,7 +10,6 @@ class UserController{
     function createSalt($length = 8){
       return substr(str_shuffle('1234567890abcdefghijklmnopqrstuvwxyz'), 0, $length);
     }
-
     $isUpdated = false;
     if($newUsername !=  "" && $newPassword !=  ""){
       foreach($userInfo as $user){
@@ -45,22 +44,74 @@ class UserController{
 
   public static function putCash($userEncrypt, $howMuchCash){
     $db = new PDO(PDO_DSN, DB_USERNAME, DB_PASSWORD);
-
     $userId = $_SESSION[$userEncrypt];
     $vm = $_SESSION[$userId . 'SES_KEY_VM'];
     $user = $_SESSION[$userId . 'SES_KEY_USER'];
-
     $vm->putCash($user, $howMuchCash, $db);
   }
 
   public static function backChange($userEncrypt){
+    $db = new PDO(PDO_DSN, DB_USERNAME, DB_PASSWORD);
+    $userId = $_SESSION[$userEncrypt];
+    $vm = $_SESSION[$userId . 'SES_KEY_VM'];
+    $user = $_SESSION[$userId . 'SES_KEY_USER'];
+    $vm->backChange($user, $db);
+  }
+
+  public static function charge($userEncrypt, $howMuchSuica){
+    $db = new PDO(PDO_DSN, DB_USERNAME, DB_PASSWORD);
+    $userId = $_SESSION[$userEncrypt];
+    $vm = $_SESSION[$userId . 'SES_KEY_VM'];
+    $user = $_SESSION[$userId . 'SES_KEY_USER'];
+    $user->chargeSuica($howMuchSuica, $db);
+  }
+
+  public static function selectedDrink($userEncrypt, $selectedDrink){
     $db = new PDO(PDO_DSN, DB_USERNAME, DB_PASSWORD);
 
     $userId = $_SESSION[$userEncrypt];
     $vm = $_SESSION[$userId . 'SES_KEY_VM'];
     $user = $_SESSION[$userId . 'SES_KEY_USER'];
 
-    $vm->backChange($user, $db);
+    // 自販機のdrinkArray,stockArrayの取得
+    $drink_in_vending_machine = $_SESSION[$userId . 'SES_KEY_VM_DRINK_RECORD'];
+    $vm->setDrinkArray($db, $drink_in_vending_machine);
+    $drinkArray = $vm->getDrinks();
+
+    $message;
+
+    foreach ($drinkArray as $drinkId => $drink){
+      if($selectedDrink == $drinkId){
+        switch ($vm->getType()){
+          case VendingMachine::$vm_type_Cash:
+            $result = $vm->buyCashVm($user, $drink, $drinkId, $db);
+            break;
+          case VendingMachine::$vm_type_Suica:
+            $vm->choiceSuicaDrink($drink, $drinkId);
+            break;
+          case VendingMachine::$vm_type_Both:
+            if($vm->getCharge() > 0){
+              $vm->buyCashVm($user, $drink, $drinkId, $db);
+            }elseif($vm->getCharge() == 0){
+              $vm->choiceSuicaDrink($drink, $drinkId);
+            }
+            break;
+        }
+        break;
+      }
+    }
+  }
+
+  public static function buySuica($userEncrypt){
+    $db = new PDO(PDO_DSN, DB_USERNAME, DB_PASSWORD);
+    $userId = $_SESSION[$userEncrypt];
+    $vm = $_SESSION[$userId . 'SES_KEY_VM'];
+    $user = $_SESSION[$userId . 'SES_KEY_USER'];
+    // 自販機のdrinkArray,stockArrayの取得
+    $drink_in_vending_machine = $_SESSION[$userId . 'SES_KEY_VM_DRINK_RECORD'];
+    $vm->setDrinkArray($db, $drink_in_vending_machine);
+    $drinkArray = $vm->getDrinks();
+    $vm->buySuicaVm($user, $drinkArray, $db);
   }
 
 
