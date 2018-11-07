@@ -1,5 +1,5 @@
 $(document).on('click','#login', function() {
-  $.post("/lessons/a_vending_machine/server/login.php",
+  $.post("/lessons/a_vending_machine/user/login",
 		{ "username": $("#username").val() },
 		function(data){
       if(data.encrypted_password == null){
@@ -12,14 +12,14 @@ $(document).on('click','#login', function() {
 });
 
 $(document).on('click','#signup', function() {
-  $.post("/lessons/a_vending_machine/server/signup.php",
+  $.post("/lessons/a_vending_machine/user/signup",
   { "newUsername": $("#newUsername").val(),
     "newPassword": $("#newPassword").val() },
 		function(data){
       if(data.isUpdated == true){
         $("#info").html("すでに登録されているユーザー名です");
       }else{
-        $("#info").html("data");
+        $("#info").html("新規登録！");
       }
 		});
 });
