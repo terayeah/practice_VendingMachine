@@ -5,21 +5,17 @@ class VendingMachineController{
 
   public static function drowvmtop($userEncrypt){
     $userId = $_SESSION[$userEncrypt];
-
     unset($_SESSION[$userId . 'SES_KEY_VM']);
     unset($_SESSION[$userId . 'SES_KEY_USER']);
     unset($_SESSION[$userId . 'SES_KEY_VM_DRINK_RECORD']);
     unset($_SESSION["choice"]);
-
     $db = new PDO(PDO_DSN, DB_USERNAME, DB_PASSWORD);
     $stmt = $db->query("select * from vending_machine");
     $vmTableArray = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
     foreach ($vmTableArray as $vmRecord) {
       $vm = new VendingMachine($vmRecord['id'], $vmRecord['name'], $vmRecord['type'], $vmRecord['cash'], $vmRecord['suica'], $vmRecord['charge']);
       $vmArray[$vmRecord['id']] = $vm->getJsonArray();
     }
-
     return array(
         "vmArray" => $vmArray
     );
@@ -27,20 +23,17 @@ class VendingMachineController{
 
   public static function drowvmview($userEncrypt, $selectedVmId){
     $db = new PDO(PDO_DSN, DB_USERNAME, DB_PASSWORD);
-
     //ログインユーザーの取得
     $userId = $_SESSION[$userEncrypt];
     $stmt = $db->query("select * from users where id = " . $userId);
     $userRecord = $stmt->fetchAll(PDO::FETCH_ASSOC);
     $user = new User($userRecord[0]['id'], $userRecord[0]['name'], $userRecord[0]['cash'], $userRecord[0]['suica']);
     $_SESSION[$userId . 'SES_KEY_USER'] = $user;
-
     // 選択した自販機の取得
     $stmt = $db->query("select * from vending_machine where id = " . $selectedVmId);
     $vmRecord = $stmt->fetchAll(PDO::FETCH_ASSOC);
     $vm = new VendingMachine($vmRecord[0]['id'], $vmRecord[0]['name'], $vmRecord[0]['type'], $vmRecord[0]['cash'], $vmRecord[0]['suica'], $vmRecord[0]['charge']);
     $_SESSION[$userId . 'SES_KEY_VM'] = $vm;
-
     // 商品データの取得
     if(!isset($_SESSION['drinkInfo'])){
       $stmt = $db->query("select * from drink");
@@ -48,13 +41,11 @@ class VendingMachineController{
       $_SESSION['drinkInfo'] = $drinkInfo;
     }
     $drinkInfo = $_SESSION['drinkInfo'];
-
     // 自販機のdrinkArray,stockArrayの取得
     $stmt = $db->query("select * from vending_machine_drink where vending_machine_id = " . $vm->getId());
     $drink_in_vending_machine = $stmt->fetchAll(PDO::FETCH_ASSOC);
     $_SESSION[$userId . 'SES_KEY_VM_DRINK_RECORD'] = $drink_in_vending_machine;
     $vm->setDrinkArray($db, $drink_in_vending_machine);
-
     // ユーザーのドリンクアレイ取得
     $stmt = $db->query("select * from user_drink where user_id = " . $userId);
     $user_drink = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -85,13 +76,11 @@ class VendingMachineController{
     $stmt = $db->query("select * from vending_machine where id = " . $selectedVmId);
     $vmRecord = $stmt->fetchAll(PDO::FETCH_ASSOC);
     $vm = new VendingMachine($vmRecord[0]['id'], $vmRecord[0]['name'], $vmRecord[0]['type'], $vmRecord[0]['cash'], $vmRecord[0]['suica'], $vmRecord[0]['charge']);
-
     // 自販機のdrinkArray,stockArrayの取得
     $stmt = $db->query("select * from vending_machine_drink where vending_machine_id = " . $vm->getId());
     $drink_in_vending_machine = $stmt->fetchAll(PDO::FETCH_ASSOC);
     $vm->setDrinkArray($db, $drink_in_vending_machine);
     $drinkArray = $vm->getDrinksJsonArray();
-
     //$drinkTableArrayの作成
     $drinkTableArray = array();
     $stmt = $db->query("select * from drink");
@@ -114,18 +103,14 @@ class VendingMachineController{
 
   public static function addVm($vmType, $vmName){
     $db = new PDO(PDO_DSN, DB_USERNAME, DB_PASSWORD);
-    $error = "";
-    if($_POST['vmName'] == ""){
-      $error .= "自販機名を入力してください<br/>";
+    if(empty($vmName)){
+      return null;
+    }else{
+      $name = $vmName;
+      $type = $vmType;
+      $db->exec("insert into vending_machine (name, type) values ('" . $name . "', '" . $type . "')");
+      return array("message" => "新規作成！");
     }
-    if($error != ""){
-      echo $error;
-      return;
-    }
-    $name = $vmName;
-    $type = $vmType;
-    $db->exec("insert into vending_machine (name, type) values ('" . $name . "', '" . $type . "')");
-    echo "新規作成！<br/>";
   }
 
   public static function addDrink($userEncrypt, $addedExistingDrink, $addDrinkCount){
@@ -146,19 +131,14 @@ class VendingMachineController{
     foreach ($drinkInfo as $value) {
       $drinkTableArray[$value['id']] = new Drink($value['name'], $value['price']);
     }
-    $error = "";
-    if($addDrinkCount == ""){
-      $error .= "個数を入力してください<br/>";
-    }
-    if(!$error == ""){
-      echo $error;
-      return;
+    if($addDrinkCount==""){
+      return array("message" => "個数を入力してください");
     }
     $isUpdated = false;
     foreach ($drinkArray as $drinkId => $drink) {
       if($drinkId == $addedExistingDrink){
-        echo "すでに同じ商品が存在しています！変更の場合は変更フォームを利用してください<br/>";
         $isUpdated = true;
+        return array("message" => "すでに同じ商品が存在しています");
         break;
       }
     }
@@ -171,7 +151,7 @@ class VendingMachineController{
         $drinkPrice
       );
       $db->exec("insert into vending_machine_drink (vending_machine_id, drink_id, drink_count) values (" . $vm->getId() . ", " . $addedExistingDrink . ", " . $addDrinkCount . ")");
-      echo "追加しました！<br/>";
+      return array("message" => "追加しました");
     }
   }
 
@@ -189,18 +169,13 @@ class VendingMachineController{
     foreach ($drinkInfo as $value) {
       $drinkTableArray[$value['id']] = new Drink($value['name'], $value['price']);
     }
-    $error = "";
     if($changeDrinkStock == ""){
-      $error .= "個数を入力してください<br/>";
-    }
-    if(!$error == ""){
-      echo $error;
-      return;
+      return array("message" => "個数を入力してください");
     }
     $isChecked = false;
     if($changeDrinkStock == null){
-      echo "変更がありません<br/>";
       $isChecked = true;
+      return array("message" => "変更がありません");
     }
     if(!$isChecked){
       foreach ($drinkArray as $drinkId => $drink) {
@@ -209,7 +184,7 @@ class VendingMachineController{
           $drinkName = $drink->getName();
           $vm->setStock($drinkName, $changeDrinkStock);
           $db->exec("update vending_machine_drink set drink_count = " . $changeDrinkStock . " where vending_machine_id = " . $vm->getId() . " and drink_id = " . $drinkId);
-          echo "在庫を変更しました<br/>";
+          return array("message" => "在庫を変更しました");
           break;
         }
       }
@@ -224,7 +199,6 @@ class VendingMachineController{
     $drink_in_vending_machine = $_SESSION[$userId . 'SES_KEY_VM_DRINK_RECORD'];
     $vm->setDrinkArray($db, $drink_in_vending_machine);
     $drinkArray = $vm->getDrinks();
-
     //$drinkTableArrayの作成
     $drinkTableArray = array();
     $drinkInfo = $_SESSION['drinkInfo'];
@@ -239,7 +213,7 @@ class VendingMachineController{
         unset($drinkArray[$drinkId]);
         $vm->unsetDrinkStock($drinkName);
         $db->exec("delete from vending_machine_drink where vending_machine_id = " . $vm->getId() . " and drink_id = " . $drinkId );
-        echo "削除完了！<br/>";
+        return array("message" => "削除完了！");
         break;
       }
     }

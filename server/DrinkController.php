@@ -5,19 +5,14 @@ class DrinkController{
 
   public static function makeProduct($drinkName, $drinkPrice){
     $db = new PDO(PDO_DSN, DB_USERNAME, DB_PASSWORD);
-    $error = "";
     if($drinkName == ""){
-      $error .= "商品名を入力してください<br/>";
+      return array("message" => "商品名を入力してください");
     }
     if($drinkPrice == ""){
-      $error .= "価格を入力してください<br/>";
-    }
-    if(!$error == ""){
-      echo $error;
-      return;
+      return array("message" => "価格を入力してください");
     }
     $db->exec("insert into drink (name, price) values ('" . $drinkName . "', " . $drinkPrice . ")");
-    echo "新規作成！<br/>";
+    return array("message" => "新規作成！");
   }
 
   public static function changeProduct($changedProduct, $changeProductName, $changeProductPrice){
@@ -31,22 +26,22 @@ class DrinkController{
     foreach ($drinkTableArray as $drinkId => $drink) {
      if($drinkId == $changedProduct){
        if ($changeProductName && $changeProductPrice){
-         echo "名称と価格を変更しました<br/>";
          $db->beginTransaction();
          $db->exec("update drink set name = '" . $changeProductName . "' where id = " . $drinkId);
          $db->exec("update drink set price = " . $changeProductPrice . " where id = " . $drinkId);
          $db->commit();
+         return array("message" => "名称と価格を変更しました");
          break;
        }elseif(!$changeProductName && $changeProductPrice){
-         echo "価格を変更しました<br/>";
          $db->exec("update drink set price = " . $changeProductPrice . " where id = " . $drinkId);
+         return array("message" => "価格を変更しました");
          break;
        }elseif($changeProductName && !$changeProductPrice){
-         echo "名称を変更しました<br/>";
          $db->exec("update drink set name = '" . $changeProductName . "' where id = " . $drinkId);
+         return array("message" => "名称を変更しました");
          break;
        }else{
-         echo "変更がありません<br/>";
+         return array("message" => "変更がありません");
          break;
        }
      }

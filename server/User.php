@@ -1,8 +1,4 @@
 <?php
-// require_once("Drink.php");
-// require_once("VendingMachine.php");
-// require_once("DataBase.php");
-
 class User{
   private $id;
   private $name;
@@ -106,7 +102,4 @@ class User{
     }
   }
 }
-
-
-
  ?>

@@ -1,7 +1,4 @@
 <?php
-
-// require_once("DataBase.php");
-
 class Drink{
   private $name;
   private $price;

@@ -3,7 +3,7 @@ $(document).on('click', '#add_vm', function() {
     { "vmType": $('[name = vmType]').val(),
       "vmName": $('#vmName').val() },
     function(data){
-      displayAddVmView(data);
+      displayAddVmView(data.message);
     });
 });
 
@@ -13,7 +13,7 @@ $(document).on('click', '#addExistingDrink', function() {
       "addedExistingDrink": $('[name = addedExistingDrink]').val(),
       "addDrinkCount": $('#addDrinkCount').val() },
     function(data){
-      displaySetDrinkView(data);
+      displaySetDrinkView(data.message);
     });
 });
 
@@ -23,7 +23,7 @@ $(document).on('click', '#changeDrink', function() {
       "changedDrink": $('[name = changedDrink]').val(),
       "changeDrinkStock": $('#changeDrinkStock').val() },
     function(data){
-      displaySetDrinkView(data);
+      displaySetDrinkView(data.message);
     });
 });
 
@@ -33,7 +33,7 @@ $(document).on('click', '#deleteDrink', function() {
       { "userEncrypt": $.cookie('userEncrypt'),
         "deletedDrink": $('[name = changedDrink]').val() },
       function(data){
-        displaySetDrinkView(data);
+        displaySetDrinkView(data.message);
       });
   }
 });
@@ -43,7 +43,7 @@ $(document).on('click', '#addDrink', function() {
     { "drinkName": $('#drinkName').val(),
       "drinkPrice": $('#drinkPrice').val() },
     function(data){
-      displaySetDrinkView(data);
+      displaySetDrinkView(data.message);
     });
 });
 
@@ -53,7 +53,7 @@ $(document).on('click', '#changeProduct', function() {
       "changeProductName": $('#changeProductName').val(),
       "changeProductPrice": $('#changeProductPrice').val()},
     function(data){
-      displaySetDrinkView(data);
+      displaySetDrinkView(data.message);
     });
 });
 

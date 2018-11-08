@@ -76,16 +76,30 @@ switch ($controller) {
 					}
 					break;
         case 'addVm':
-          VendingMachineController::addVm($_POST['vmType'], $_POST['vmName']);
+          $result = VendingMachineController::addVm($_POST['vmType'], $_POST['vmName']);
+          if($result != null){
+						response_json($result);
+					}else{
+            response_json(array("message" => "名前を入力してください"));
+          }
 					break;
         case 'addDrink':
-          VendingMachineController::addDrink($_POST['userEncrypt'], $_POST['addedExistingDrink'], $_POST['addDrinkCount']);
+          $result = VendingMachineController::addDrink($_POST['userEncrypt'], $_POST['addedExistingDrink'], $_POST['addDrinkCount']);
+          if($result != null){
+						response_json($result);
+					}
 					break;
         case 'changeDrink':
-          VendingMachineController::changeDrink($_POST['userEncrypt'], $_POST['changedDrink'], $_POST['changeDrinkStock']);
+          $result = VendingMachineController::changeDrink($_POST['userEncrypt'], $_POST['changedDrink'], $_POST['changeDrinkStock']);
+          if($result != null){
+						response_json($result);
+					}
 					break;
         case 'deleteDrink':
-          VendingMachineController::deleteDrink($_POST['userEncrypt'], $_POST['deletedDrink']);
+          $result = VendingMachineController::deleteDrink($_POST['userEncrypt'], $_POST['deletedDrink']);
+          if($result != null){
+						response_json($result);
+					}
 					break;
 			}
 		break;
@@ -95,11 +109,17 @@ switch ($controller) {
 		case 'drink':
 			switch ($action) {
 				case 'makeProduct':
-          DrinkController::makeProduct($_POST['drinkName'], $_POST['drinkPrice']);
+          $result = DrinkController::makeProduct($_POST['drinkName'], $_POST['drinkPrice']);
+          if($result != null){
+						response_json($result);
+					}
 					break;
         case 'changeProduct':
-          DrinkController::changeProduct($_POST['changedProduct'], $_POST['changeProductName'], $_POST['changeProductPrice']);
-					break;
+          $result = DrinkController::changeProduct($_POST['changedProduct'], $_POST['changeProductName'], $_POST['changeProductPrice']);
+          if($result != null){
+						response_json($result);
+					}
+          break;
 			}
 		break;
 }

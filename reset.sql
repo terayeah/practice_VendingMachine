@@ -16,7 +16,7 @@ create table users(
 
 create table vending_machine(
   id int not null auto_increment primary key,
-  name varchar(255),
+  name varchar(255) unique,
   type enum('cash', 'suica', 'both'),
   cash int default 0,
   suica int default 0,

@@ -1,8 +1,4 @@
 <?php
-// require_once("Drink.php");
-// require_once("User.php");
-// require_once("DataBase.php");
-
 Class VendingMachine{
   public static $vm_type_Cash = 'cash';
   public static $vm_type_Suica = 'suica';
@@ -194,6 +190,30 @@ Class VendingMachine{
       return false;
     }
   }
+
+  // public function checkError($user, $drink){
+  //   ret = [];
+  //
+  //   // ユーザーのウォレット内容を確認
+  //   $error = $error == null ? $user->checkWallet($drink->getPrice()) : $error;
+  //   if($error != null)
+  //     $ret[] = $error;
+  //   // ストックを確認
+  //   $error = $error == null ? $this->checkStock($drink->getName()) : $error;
+  //
+  //   // 入金額を確認
+  //   $error = $error == null ? $this->checkCharge($drink) : $error;
+  //
+  //   return $error;
+  // }
+  //
+  // function checkWallet(値段){
+  //   if(値段 > ユーザーの残高){
+  //     return "お金が足りないよ";
+  //   }
+  //
+  //   return null;
+  // }
 
   public function buyCashVm($user, $drink, $drinkId, $db){
     if($this->checkError($user, $drink)){
