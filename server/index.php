@@ -1,7 +1,7 @@
 <?php
-require_once("UserController.php");
-require_once("VendingMachineController.php");
-require_once("DrinkController.php");
+require_once("Controller/UserController.php");
+require_once("Controller/VendingMachineController.php");
+require_once("Controller/DrinkController.php");
 require_once("VendingMachine.php");
 require_once("User.php");
 require_once("Drink.php");
@@ -36,8 +36,11 @@ switch ($controller) {
 					}
 					break;
 				case 'putCash':
-          UserController::putCash($_POST['userEncrypt'], $_POST["howMuchCash"]);
-					break;
+          $result = UserController::putCash($_POST['userEncrypt'], $_POST["howMuchCash"]);
+          if($result != null){
+						response_json($result);
+					}
+          break;
         case 'backChange':
           UserController::backChange($_POST['userEncrypt']);
 					break;
@@ -45,10 +48,16 @@ switch ($controller) {
           UserController::charge($_POST['userEncrypt'], $_POST["howMuchSuica"]);
           break;
         case 'selectedDrink':
-          UserController::selectedDrink($_POST['userEncrypt'], $_POST["selectedDrink"]);
+          $result = UserController::selectedDrink($_POST['userEncrypt'], $_POST["selectedDrink"]);
+          if($result != null){
+						response_json($result);
+					}
           break;
         case 'buySuica':
-          UserController::buySuica($_POST['userEncrypt']);
+          $result = UserController::buySuica($_POST['userEncrypt']);
+          if($result != null){
+						response_json($result);
+					}
           break;
 			}
 		break;
@@ -79,9 +88,7 @@ switch ($controller) {
           $result = VendingMachineController::addVm($_POST['vmType'], $_POST['vmName']);
           if($result != null){
 						response_json($result);
-					}else{
-            response_json(array("message" => "名前を入力してください"));
-          }
+					}
 					break;
         case 'addDrink':
           $result = VendingMachineController::addDrink($_POST['userEncrypt'], $_POST['addedExistingDrink'], $_POST['addDrinkCount']);

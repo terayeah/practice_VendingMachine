@@ -1,5 +1,5 @@
 <?php
-require_once("define.php");
+require_once("/opt/local/www/apache2/html/lessons/a_vending_machine/server/define.php");
 
 class VendingMachineController{
 
@@ -104,7 +104,7 @@ class VendingMachineController{
   public static function addVm($vmType, $vmName){
     $db = new PDO(PDO_DSN, DB_USERNAME, DB_PASSWORD);
     if(empty($vmName)){
-      return null;
+      return array("error" => "名前を入力してください");
     }else{
       $name = $vmName;
       $type = $vmType;

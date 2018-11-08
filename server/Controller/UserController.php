@@ -1,5 +1,5 @@
 <?php
-require_once("define.php");
+require_once("/opt/local/www/apache2/html/lessons/a_vending_machine/server/define.php");
 
 class UserController{
 
@@ -47,7 +47,8 @@ class UserController{
     $userId = $_SESSION[$userEncrypt];
     $vm = $_SESSION[$userId . 'SES_KEY_VM'];
     $user = $_SESSION[$userId . 'SES_KEY_USER'];
-    $vm->putCash($user, $howMuchCash, $db);
+    $result = $vm->putCash($user, $howMuchCash, $db);
+    return $result;
   }
 
   public static function backChange($userEncrypt){
@@ -81,15 +82,19 @@ class UserController{
         switch ($vm->getType()){
           case VendingMachine::$vm_type_Cash:
             $result = $vm->buyCashVm($user, $drink, $drinkId, $db);
+            return $result;
             break;
           case VendingMachine::$vm_type_Suica:
-            $vm->choiceSuicaDrink($drink, $drinkId);
+            $result = $vm->choiceSuicaDrink($drink, $drinkId);
+            return $result;
             break;
           case VendingMachine::$vm_type_Both:
             if($vm->getCharge() > 0){
-              $vm->buyCashVm($user, $drink, $drinkId, $db);
+              $result = $vm->buyCashVm($user, $drink, $drinkId, $db);
+              return $result;
             }elseif($vm->getCharge() == 0){
-              $vm->choiceSuicaDrink($drink, $drinkId);
+              $result = $vm->choiceSuicaDrink($drink, $drinkId);
+              return $result;
             }
             break;
         }
@@ -107,7 +112,8 @@ class UserController{
     $drink_in_vending_machine = $_SESSION[$userId . 'SES_KEY_VM_DRINK_RECORD'];
     $vm->setDrinkArray($db, $drink_in_vending_machine);
     $drinkArray = $vm->getDrinks();
-    $vm->buySuicaVm($user, $drinkArray, $db);
+    $result = $vm->buySuicaVm($user, $drinkArray, $db);
+    return $result;
   }
 
 }

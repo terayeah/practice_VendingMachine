@@ -3,7 +3,11 @@ $(document).on('click', '#add_vm', function() {
     { "vmType": $('[name = vmType]').val(),
       "vmName": $('#vmName').val() },
     function(data){
-      displayAddVmView(data.message);
+      if(data.error == null){
+        displayAddVmView(data.message);
+      }else{
+        displayAddVmView(data.error);
+      }
     });
 });
 

@@ -60,7 +60,6 @@ Class VendingMachine{
     if($user->getSuica() >= $drink->getPrice()){
       return true;
     }else{
-      echo "Suica残高がたりません</br>";
       return false;
     }
   }
@@ -77,7 +76,6 @@ Class VendingMachine{
     if($this->getCharge() >= $drink->getPrice()){
       return true;
     }else{
-      echo "お金を入れてください</br>";
       return false;
     }
   }
@@ -180,71 +178,57 @@ Class VendingMachine{
       $db->exec("update vending_machine set charge = " . $this->charge . " where id = '" . $this->id . "'");
       $db->exec("update users set cash = " . $user->getCash() . " where name = '" . $user->getName() . "'");
       $db->commit();
-    }
-  }
-
-  public function checkError($user, $drink){
-    if($user->checkWallet($drink->getPrice()) && $this->checkStock($drink->getName()) && $this->checkCharge($drink)){
-      return true;
+      return array("error" => null);
     }else{
-      return false;
+      return array("error" => "お金が足りません");
     }
   }
-
-  // public function checkError($user, $drink){
-  //   ret = [];
-  //
-  //   // ユーザーのウォレット内容を確認
-  //   $error = $error == null ? $user->checkWallet($drink->getPrice()) : $error;
-  //   if($error != null)
-  //     $ret[] = $error;
-  //   // ストックを確認
-  //   $error = $error == null ? $this->checkStock($drink->getName()) : $error;
-  //
-  //   // 入金額を確認
-  //   $error = $error == null ? $this->checkCharge($drink) : $error;
-  //
-  //   return $error;
-  // }
-  //
-  // function checkWallet(値段){
-  //   if(値段 > ユーザーの残高){
-  //     return "お金が足りないよ";
-  //   }
-  //
-  //   return null;
-  // }
 
   public function buyCashVm($user, $drink, $drinkId, $db){
-    if($this->checkError($user, $drink)){
-      $this->decCharge($drink->getPrice());
-      $this->addCash($drink->getPrice());
-      $this->decStock($drinkId);
-      echo "ありがとうございます！</br>";
-      $db->beginTransaction();
-      $db->exec("update vending_machine set charge = " . $this->charge . " where id = '" . $this->id . "'");
-      $db->exec("update vending_machine set cash = " . $this->cash . " where id = '" . $this->id . "'");
-      $db->exec("update vending_machine_drink set drink_count = " . $this->stockArray[$drink->getName()] . " where vending_machine_id = " . $this->id . " and drink_id = " . $drinkId);
-      $user->addDrink($drinkId, $user->getName(), $db);
-      $db->commit();
+    if($user->checkWallet($drink->getPrice())){
+      if($this->checkStock($drink->getName())){
+        if($this->checkCharge($drink)){
+          $this->decCharge($drink->getPrice());
+          $this->addCash($drink->getPrice());
+          $this->decStock($drinkId);
+          $db->beginTransaction();
+          $db->exec("update vending_machine set charge = " . $this->charge . " where id = '" . $this->id . "'");
+          $db->exec("update vending_machine set cash = " . $this->cash . " where id = '" . $this->id . "'");
+          $db->exec("update vending_machine_drink set drink_count = " . $this->stockArray[$drink->getName()] . " where vending_machine_id = " . $this->id . " and drink_id = " . $drinkId);
+          $user->addDrink($drinkId, $user->getName(), $db);
+          $db->commit();
+          return array("error" => null,
+                        "message" => "ありがとうございます");
+        }else{
+          return array("error" => "入金してください");
+        }
+      }else{
+        return array("error" => "在庫がありません");
+      }
+    }else{
+      return array("error" => "お金が足りません");
     }
   }
 
   public function choiceSuicaDrink($drink, $drinkId){
     if($this->checkStock($drink->getName())){
-      echo $drink->getName() . "を選択中 <br/>";
       $_SESSION["choice"] = $drinkId;
+      return array("error" => null,
+                   "message" => "を選択中",
+                   "drinkname" => $drink->getName()
+                  );
+    }else{
+      return array("error" => "在庫がありません");
     }
   }
 
   public function buySuicaVm($user, $drinkArray, $db){
     foreach ($drinkArray as $drinkId => $drink) {
       if($_SESSION["choice"] == $drinkId){
-        if($this->checkStock($drink->getName()) && $this->checkSuica($user, $drink)){
+        if($this->checkSuica($user, $drink)){
           $this->addSuica($drink->getPrice());
           $this->decStock($drinkId);
           $user->decSuica($drink->getPrice());
-          echo "ありがとうございます</br>";
           $db->beginTransaction();
           $db->exec("update vending_machine set suica = " . $this->suica . " where id = '" . $this->id . "'");
           $db->exec("update vending_machine_drink set drink_count = " . $this->stockArray[$drink->getName()] . " where vending_machine_id = " . $this->id . " and drink_id = " . $drinkId);
@@ -252,7 +236,11 @@ Class VendingMachine{
           $user->addDrink($drinkId, $user->getName(), $db);
           $db->commit();
           $_SESSION["choice"] = "";
+          return array("error" => null,
+                        "message" => "ありがとうございます");
           break;
+        }else{
+          return array("error" => "suica残高が足りません");
         }
       }
     }

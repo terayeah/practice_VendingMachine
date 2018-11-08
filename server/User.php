@@ -86,7 +86,6 @@ class User{
     if($this->getCash() >= $howMuch){
       return true;
     }else{
-      echo "お金が足りません</br>";
       return false;
     }
   }

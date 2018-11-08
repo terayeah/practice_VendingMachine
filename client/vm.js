@@ -6,8 +6,11 @@ $(document).on('click', '#putCash', function() {
   $.post("/lessons/a_vending_machine/user/putCash",
     { "userEncrypt": $.cookie('userEncrypt'),
       "howMuchCash": $('#howMuchCash').val() },
-    function(){
+    function(data){
       displayVmView($.cookie('choicedVmId'));
+      if(data.error != null){
+        $("#info").html(data.error);
+      }
     });
 });
 
@@ -34,7 +37,15 @@ $(document).on('click', '#selectedDrink', function() {
       "selectedDrink": $(this).val()},
     function(data){
       displayVmView($.cookie('choicedVmId'));
-      $("#info").html(data);
+      console.log(data);
+      if(data.error != null){
+        $("#info").html(data.error);
+      }else if(data.drinkname != null){
+        $("#info").html(data.drinkname + data.message);
+      }else{
+        $("#info").html(data.message);
+      }
+
     });
 });
 
@@ -43,7 +54,12 @@ $(document).on('click', '#buySuica', function() {
     { "userEncrypt": $.cookie('userEncrypt') },
     function(data){
       displayVmView($.cookie('choicedVmId'));
-      $("#info").html(data);
+      console.log(data);
+      if(data.error != null){
+        $("#info").html(data.error);
+      }else{
+        $("#info").html(data.message);
+      }
     });
 });
 
