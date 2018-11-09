@@ -9,22 +9,26 @@ class UserController{
       return substr(str_shuffle('1234567890abcdefghijklmnopqrstuvwxyz'), 0, $length);
     }
     $isUpdated = false;
-    if($newUsername !=  "" && $newPassword !=  ""){
+    if(!empty($newUsername) && !empty($newPassword)){
       foreach($userInfo as $user){
         if($user['name'] == $newUsername){
           $isUpdated = true;
+          return array("error" => "すでに登録されているユーザー名です");
         }
       }
       if(!$isUpdated){
         $salt = createSalt();
         $encrypted_password = crypt($newPassword, $salt);
         $db->insertUser($newUsername, $salt, $encrypted_password);
+        return array(
+            "message" => "新規登録完了です"
+        );
       }
+    }else{
+      return array(
+          "error" => "入力してください"
+      );
     }
-
-    return array(
-        "isUpdated" => $isUpdated
-    );
   }
 
   public static function login($username, $password){

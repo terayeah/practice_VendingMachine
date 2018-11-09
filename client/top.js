@@ -17,10 +17,10 @@ $(document).on('click','#signup', function() {
   { "newUsername": $("#newUsername").val(),
     "newPassword": $("#newPassword").val() },
 		function(data){
-      if(data.isUpdated == true){
-        $("#info").html("すでに登録されているユーザー名です");
+      if(data.error == null){
+        $("#info").html(data.message);
       }else{
-        $("#info").html("新規登録！");
+        $("#info").html(data.error);
       }
 		});
 });

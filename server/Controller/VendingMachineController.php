@@ -122,13 +122,13 @@ class VendingMachineController{
       $drinkTableArray[$value['id']] = new Drink($value['name'], $value['price']);
     }
     if($addDrinkCount==""){
-      return array("message" => "個数を入力してください");
+      return array("error" => "個数を入力してください");
     }
     $isUpdated = false;
     foreach ($drinkArray as $drinkId => $drink) {
       if($drinkId == $addedExistingDrink){
         $isUpdated = true;
-        return array("message" => "すでに同じ商品が存在しています");
+        return array("error" => "すでに同じ商品が存在しています");
         break;
       }
     }
@@ -160,12 +160,12 @@ class VendingMachineController{
       $drinkTableArray[$value['id']] = new Drink($value['name'], $value['price']);
     }
     if($changeDrinkStock == ""){
-      return array("message" => "個数を入力してください");
+      return array("error" => "個数を入力してください");
     }
     $isChecked = false;
     if($changeDrinkStock == null){
       $isChecked = true;
-      return array("message" => "変更がありません");
+      return array("error" => "変更がありません");
     }
     if(!$isChecked){
       foreach ($drinkArray as $drinkId => $drink) {

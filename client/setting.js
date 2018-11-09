@@ -17,7 +17,11 @@ $(document).on('click', '#addExistingDrink', function() {
       "addedExistingDrink": $('[name = addedExistingDrink]').val(),
       "addDrinkCount": $('#addDrinkCount').val() },
     function(data){
-      displaySetDrinkView(data.message);
+      if(data.error == null){
+        displaySetDrinkView(data.message);
+      }else{
+        displaySetDrinkView(data.error);
+      }
     });
 });
 
@@ -27,7 +31,11 @@ $(document).on('click', '#changeDrink', function() {
       "changedDrink": $('[name = changedDrink]').val(),
       "changeDrinkStock": $('#changeDrinkStock').val() },
     function(data){
-      displaySetDrinkView(data.message);
+      if(data.error == null){
+        displaySetDrinkView(data.message);
+      }else{
+        displaySetDrinkView(data.error);
+      }
     });
 });
 
