@@ -4,7 +4,7 @@ require_once("MapperBase.php");
 class DrinkMapper extends MapperBase{
 
   public function selectAll(){
-    parent::select("drink");
+    return parent::select("drink");
   }
 
   public function selectFromId($id){

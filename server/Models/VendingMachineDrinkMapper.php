@@ -4,7 +4,7 @@ require_once("MapperBase.php");
 class VendingMachineDrinkMapper extends MapperBase{
 
   public function selectAll(){
-    parent::select("vending_machine_drink");
+    return parent::select("vending_machine_drink");
   }
 
   public function selectFromVmId($vending_machine_id){

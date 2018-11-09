@@ -3,8 +3,8 @@
 class UserController{
 
   public static function signup($newUsername, $newPassword){
-    $db = new Mapper();
-    $userInfo = $db->selectFromUser();
+    $userdb = new UserMapper();
+    $userInfo = $userdb->selectAll();
     function createSalt($length = 8){
       return substr(str_shuffle('1234567890abcdefghijklmnopqrstuvwxyz'), 0, $length);
     }
@@ -19,7 +19,7 @@ class UserController{
       if(!$isUpdated){
         $salt = createSalt();
         $encrypted_password = crypt($newPassword, $salt);
-        $db->insertUser($newUsername, $salt, $encrypted_password);
+        $userdb->insertUser($newUsername, $salt, $encrypted_password);
         return array(
             "message" => "新規登録完了です"
         );
@@ -32,8 +32,8 @@ class UserController{
   }
 
   public static function login($username, $password){
-    $db = new Mapper();
-    $userInfo = $db->selectFromUserWhereName($username);
+    $userdb = new UserMapper();
+    $userInfo = $userdb->selectFromName($username);
     if($userInfo == null){
       return array(
           "error" => "登録されていない名称です"

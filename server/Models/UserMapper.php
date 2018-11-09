@@ -4,7 +4,7 @@ require_once("MapperBase.php");
 class UserMapper extends MapperBase{
 
   public function selectAll(){
-    parent::select("users");
+    return parent::select("users");
   }
 
   public function selectFromId($id){
@@ -24,7 +24,7 @@ class UserMapper extends MapperBase{
   }
 
   public function insertUser($name, $salt, $encrypted_password){
-    return parent::insert("users (name, cash, suica, salt, encrypted_password) values (:name, 5000, 2000, :salt, :encrypted_password)",
+    parent::insert("users (name, cash, suica, salt, encrypted_password) values (:name, 5000, 2000, :salt, :encrypted_password)",
                           array(':name' => $name,
                                 ':salt' => $salt,
                                 ':encrypted_password' => $encrypted_password

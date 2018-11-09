@@ -17,6 +17,7 @@ $(document).on('click','#signup', function() {
   { "newUsername": $("#newUsername").val(),
     "newPassword": $("#newPassword").val() },
 		function(data){
+      console.log(data);
       if(data.error == null){
         $("#info").html(data.message);
       }else{

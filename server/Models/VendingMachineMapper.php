@@ -4,7 +4,7 @@ require_once("MapperBase.php");
 class VendingMachineMapper extends MapperBase{
 
   public function selectAll(){
-    parent::select("vending_machine");
+    return parent::select("vending_machine");
   }
 
   public function selectFromId($id){
@@ -23,7 +23,7 @@ class VendingMachineMapper extends MapperBase{
     return parent::update("vending_machine", "charge = :charge", array(":charge"=>$charge), $id);
   }
 
-  public function insertVendingMachine($name, $type){
+  public static function insertVendingMachine($name, $type){
     return parent::insert("vending_machine (name, type) values (:name, :type)",
                           array(':name' => $name,
                                 ':type' => $type

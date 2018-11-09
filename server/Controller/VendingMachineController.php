@@ -8,8 +8,8 @@ class VendingMachineController{
     unset($_SESSION[$userId . 'SES_KEY_USER']);
     unset($_SESSION[$userId . 'SES_KEY_VM_DRINK_RECORD']);
     unset($_SESSION["choice"]);
-    $db = new Mapper();
-    $vmTableArray = $db->selectFromVendingMachine();
+    $vmdb = new VendingMachineMapper();
+    $vmTableArray = $vmdb->selectAll();
     foreach ($vmTableArray as $vmRecord) {
       $vm = new VendingMachine($vmRecord['id'], $vmRecord['name'], $vmRecord['type'], $vmRecord['cash'], $vmRecord['suica'], $vmRecord['charge']);
       $vmArray[$vmRecord['id']] = $vm->getJsonArray();
