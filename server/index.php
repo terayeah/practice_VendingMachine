@@ -2,6 +2,7 @@
 require_once("Controller/UserController.php");
 require_once("Controller/VendingMachineController.php");
 require_once("Controller/DrinkController.php");
+require_once("Models/mapper.php");
 require_once("VendingMachine.php");
 require_once("User.php");
 require_once("Drink.php");
@@ -30,7 +31,7 @@ switch ($controller) {
 					}
 					break;
 				case 'login':
-          $result = UserController::login($_POST['username']);
+          $result = UserController::login($_POST['username'], $_POST['password']);
           if($result != null){
 						response_json($result);
 					}

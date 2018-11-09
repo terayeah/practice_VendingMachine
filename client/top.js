@@ -1,9 +1,10 @@
 $(document).on('click','#login', function() {
   $.post("/lessons/a_vending_machine/user/login",
-		{ "username": $("#username").val() },
+		{ "username": $("#username").val(),
+      "password": $("#password").val()},
 		function(data){
-      if(data.encrypted_password == null){
-        $("#info").html("登録されていないユーザーです");
+      if(data.error != null){
+        $("#info").html(data.error);
       }else{
         $.cookie('userEncrypt', data.encrypted_password);
         displayUserView();

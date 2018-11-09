@@ -174,10 +174,7 @@ Class VendingMachine{
     if($user->checkWallet($howMuch)){
       $this->addCharge($howMuch);
       $user->decCash($howMuch);
-      $db->beginTransaction();
-      $db->exec("update vending_machine set charge = " . $this->charge . " where id = '" . $this->id . "'");
-      $db->exec("update users set cash = " . $user->getCash() . " where name = '" . $user->getName() . "'");
-      $db->commit();
+      $db->putCash($this->charge, $this->id, $user->getCash(), $user->getName());
       return array("error" => null);
     }else{
       return array("error" => "お金が足りません");
@@ -191,12 +188,8 @@ Class VendingMachine{
           $this->decCharge($drink->getPrice());
           $this->addCash($drink->getPrice());
           $this->decStock($drinkId);
-          $db->beginTransaction();
-          $db->exec("update vending_machine set charge = " . $this->charge . " where id = '" . $this->id . "'");
-          $db->exec("update vending_machine set cash = " . $this->cash . " where id = '" . $this->id . "'");
-          $db->exec("update vending_machine_drink set drink_count = " . $this->stockArray[$drink->getName()] . " where vending_machine_id = " . $this->id . " and drink_id = " . $drinkId);
-          $user->addDrink($drinkId, $user->getName(), $db);
-          $db->commit();
+          $user->addDrink($drinkId);
+          $db->buyCashVm($this->charge, $this->cash, $this->id, $this->stockArray[$drink->getName()], $user, $drinkId);
           return array("error" => null,
                         "message" => "ありがとうございます");
         }else{
@@ -229,12 +222,8 @@ Class VendingMachine{
           $this->addSuica($drink->getPrice());
           $this->decStock($drinkId);
           $user->decSuica($drink->getPrice());
-          $db->beginTransaction();
-          $db->exec("update vending_machine set suica = " . $this->suica . " where id = '" . $this->id . "'");
-          $db->exec("update vending_machine_drink set drink_count = " . $this->stockArray[$drink->getName()] . " where vending_machine_id = " . $this->id . " and drink_id = " . $drinkId);
-          $db->exec("update users set suica = " . $user->getSuica() . " where name = '" . $user->getName() . "'");
-          $user->addDrink($drinkId, $user->getName(), $db);
-          $db->commit();
+          $user->addDrink($drinkId);
+          $db->buySuicaVm($this->suica, $this->id, $this->stockArray[$drink->getName()], $user, $drinkId);
           $_SESSION["choice"] = "";
           return array("error" => null,
                         "message" => "ありがとうございます");
@@ -250,11 +239,8 @@ Class VendingMachine{
     $user->addCash($this->charge);
     $cash = $user->getCash();
     $name = $user->getName();
-    $db->beginTransaction();
-    $db->exec("update users set cash = " . $cash . " where name = '" . $name . "'");
     $this->charge = 0;
-    $db->exec("update vending_machine set charge = 0 where id = '" . $this->id . "'");
-    $db->commit();
+    $db->backChange($cash, $name, $this->id);
   }
 
 }

@@ -1,12 +1,10 @@
 <?php
-require_once("/opt/local/www/apache2/html/lessons/a_vending_machine/server/define.php");
 
 class UserController{
 
   public static function signup($newUsername, $newPassword){
-    $db = new PDO(PDO_DSN, DB_USERNAME, DB_PASSWORD);
-    $stmt = $db->query("select * from users");
-    $userInfo = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $db = new Mapper();
+    $userInfo = $db->selectFromUser();
     function createSalt($length = 8){
       return substr(str_shuffle('1234567890abcdefghijklmnopqrstuvwxyz'), 0, $length);
     }
@@ -20,7 +18,7 @@ class UserController{
       if(!$isUpdated){
         $salt = createSalt();
         $encrypted_password = crypt($newPassword, $salt);
-        $db->exec("insert into users (name, cash, suica, salt, encrypted_password) values ('" . $newUsername . "', 5000, 2000, '" . $salt . "', '" . $encrypted_password . "')");
+        $db->insertUser($newUsername, $salt, $encrypted_password);
       }
     }
 
@@ -29,21 +27,32 @@ class UserController{
     );
   }
 
-  public static function login($username){
-    $db = new PDO(PDO_DSN, DB_USERNAME, DB_PASSWORD);
-    $stmt = $db->query("select * from users where name = '" . $username . "'");
-    $userInfo = $stmt->fetchAll(PDO::FETCH_ASSOC);
+  public static function login($username, $password){
+    $db = new Mapper();
+    $userInfo = $db->selectFromUserWhereName($username);
+    if($userInfo == null){
+      return array(
+          "error" => "登録されていない名称です"
+      );
+    }
     $userId = $userInfo[0]['id'];
     $userEncrypt = $userInfo[0]['encrypted_password'];
-    $_SESSION[$userEncrypt] = $userId;
+    $xxx = crypt($password, $userInfo[0]['salt']);
+    if($xxx == $userEncrypt){
+      $_SESSION[$userEncrypt] = $userId;
+      return array(
+          "encrypted_password" => htmlspecialchars($userEncrypt)
+      );
+    }else{
+      return array(
+          "error" => "パスワードが間違っています"
+      );
+    }
 
-    return array(
-        "encrypted_password" => htmlspecialchars($userEncrypt)
-    );
   }
 
   public static function putCash($userEncrypt, $howMuchCash){
-    $db = new PDO(PDO_DSN, DB_USERNAME, DB_PASSWORD);
+    $db = new Mapper();
     $userId = $_SESSION[$userEncrypt];
     $vm = $_SESSION[$userId . 'SES_KEY_VM'];
     $user = $_SESSION[$userId . 'SES_KEY_USER'];
@@ -52,7 +61,7 @@ class UserController{
   }
 
   public static function backChange($userEncrypt){
-    $db = new PDO(PDO_DSN, DB_USERNAME, DB_PASSWORD);
+    $db = new Mapper();
     $userId = $_SESSION[$userEncrypt];
     $vm = $_SESSION[$userId . 'SES_KEY_VM'];
     $user = $_SESSION[$userId . 'SES_KEY_USER'];
@@ -60,7 +69,7 @@ class UserController{
   }
 
   public static function charge($userEncrypt, $howMuchSuica){
-    $db = new PDO(PDO_DSN, DB_USERNAME, DB_PASSWORD);
+    $db = new Mapper();
     $userId = $_SESSION[$userEncrypt];
     $vm = $_SESSION[$userId . 'SES_KEY_VM'];
     $user = $_SESSION[$userId . 'SES_KEY_USER'];
@@ -68,7 +77,7 @@ class UserController{
   }
 
   public static function selectedDrink($userEncrypt, $selectedDrink){
-    $db = new PDO(PDO_DSN, DB_USERNAME, DB_PASSWORD);
+    $db = new Mapper();
     $userId = $_SESSION[$userEncrypt];
     $vm = $_SESSION[$userId . 'SES_KEY_VM'];
     $user = $_SESSION[$userId . 'SES_KEY_USER'];
@@ -104,7 +113,7 @@ class UserController{
   }
 
   public static function buySuica($userEncrypt){
-    $db = new PDO(PDO_DSN, DB_USERNAME, DB_PASSWORD);
+    $db = new Mapper();
     $userId = $_SESSION[$userEncrypt];
     $vm = $_SESSION[$userId . 'SES_KEY_VM'];
     $user = $_SESSION[$userId . 'SES_KEY_USER'];

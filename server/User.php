@@ -29,13 +29,6 @@ class User{
     return $this->id;
   }
 
-  public static function getIdFromName($name, $db){
-    $stmt = $db->query("select * from users where name = '" . $name . "'");
-    $userRecord = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    $id = $userRecord[0]['id'];
-    return $id;
-  }
-
   public function addCash($change){
     $this->cash += $change;
   }
@@ -60,14 +53,8 @@ class User{
     return $this->suica;
   }
 
-  public function addDrink($drinkId, $userName, $db){
+  public function addDrink($drinkId){
     $this->drinkArray[$drinkId] = $this->drinkArray[$drinkId] + 1;
-    $userId = $this->getId();
-    if($this->drinkArray[$drinkId] == 1){
-      $db->exec("insert into user_drink (user_id, drink_id, drink_count) values (" . $userId . ", " . $drinkId . ", 1)");
-    }else{
-      $db->exec("update user_drink set drink_count = " . $this->drinkArray[$drinkId] . " where user_id = " . $userId . " and drink_id = " . $drinkId);
-    }
   }
 
   public function setDrinkArray($db, $user_drink){
@@ -82,6 +69,11 @@ class User{
     return $this->drinkArray;
   }
 
+  public function getOwnDrinkCount($drinkId){
+    $count = $this->drinkArray[$drinkId];
+    return $count;
+  }
+
   public function checkWallet($howMuch){
     if($this->getCash() >= $howMuch){
       return true;
@@ -94,10 +86,7 @@ class User{
     if($this->checkWallet($howMuch)){
       $this->decCash($howMuch);
       $this->addSuica($howMuch);
-      $db->beginTransaction();
-      $db->exec("update users set cash = " . $this->cash . " where name = '" . $this->name . "'");
-      $db->exec("update users set suica = " . $this->suica . " where name = '" . $this->name . "'");
-      $db->commit();
+      $db->chargeSuica($this->cash, $this->suica, $this->name);
     }
   }
 }
