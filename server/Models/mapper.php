@@ -98,6 +98,13 @@ class Mapper{
                            ));
   }
 
+  public function insertDrink($name, $price){
+    $stmt = $this->db->prepare("insert into drink (name, price) values (:name, :price)");
+    $stmt->execute(array(':name' => $name,
+                         ':price' => $price
+                           ));
+  }
+
   public function insertVendingMachineDrink($vending_machine_id, $drink_id, $drink_count){
     $stmt = $this->db->prepare("insert into vending_machine_drink (vending_machine_id, drink_id, drink_count) values (:vending_machine_id, :drink_id, :drink_count)");
     $stmt->execute(array(':vending_machine_id' => $vending_machine_id,
@@ -106,8 +113,16 @@ class Mapper{
                            ));
   }
 
-  public function updateVMDrink($changeDrinkStock, $vmId, $drinkId){
+  public function updateVMDrinkCount($changeDrinkStock, $vmId, $drinkId){
     $this->db->exec("update vending_machine_drink set drink_count = " . $changeDrinkStock . " where vending_machine_id = " . $vmId . " and drink_id = " . $drinkId);
+  }
+
+  public function updateProductName($changeProductName, $drinkId){
+    $this->db->exec("update drink set name = '" . $changeProductName . "' where id = " . $drinkId);
+  }
+
+  public function updateProductPrice($changeProductPrice, $drinkId){
+    $this->db->exec("update drink set price = " . $changeProductPrice . " where id = " . $drinkId);
   }
 
   public function deleteVMDrink($vmId, $drinkId){

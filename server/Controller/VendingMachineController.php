@@ -173,7 +173,7 @@ class VendingMachineController{
           $drink = $drinkTableArray[$changedDrink];
           $drinkName = $drink->getName();
           $vm->setStock($drinkName, $changeDrinkStock);
-          $db->updateVMDrink($changeDrinkStock, $vm->getId(), $drinkId);
+          $db->updateVMDrinkCount($changeDrinkStock, $vm->getId(), $drinkId);
           return array("message" => "在庫を変更しました");
           break;
         }
