@@ -23,8 +23,8 @@ class VendingMachineMapper extends MapperBase{
     return parent::update("vending_machine", "charge = :charge", array(":charge"=>$charge), $id);
   }
 
-  public static function insertVendingMachine($name, $type){
-    return parent::insert("vending_machine (name, type) values (:name, :type)",
+  public function insertVendingMachine($name, $type){
+    parent::insert("vending_machine (name, type) values (:name, :type)",
                           array(':name' => $name,
                                 ':type' => $type
                                 )

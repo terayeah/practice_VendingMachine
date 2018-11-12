@@ -98,20 +98,20 @@ class VendingMachineController{
   }
 
   public static function addVm($vmType, $vmName){
-    $db = new Mapper();
+    $vmdb = new VendingMachineMapper();
     if(empty($vmName)){
       return array("error" => "名前を入力してください");
     }else{
       $name = $vmName;
       $type = $vmType;
-      $db->insertVendingMachine($name, $type);
+      $vmdb->insertVendingMachine($name, $type);
       return array("message" => "新規作成！");
     }
   }
 
   public static function addDrink($userEncrypt, $addedExistingDrink, $addDrinkCount){
     // 選択した自販機の取得
-    $db = new Mapper();
+    $vmdrinkdb = new VendingMachineDrinkMapper();
     $userId = $_SESSION[$userEncrypt];
     $vm = $_SESSION[$userId . 'SES_KEY_VM'];
     // 自販機のdrinkArray,stockArrayの取得
@@ -146,13 +146,13 @@ class VendingMachineController{
         $drinkName,
         $drinkPrice
       );
-      $db->insertVendingMachineDrink($vm->getId(), $addedExistingDrink, $addDrinkCount);
+      $vmdrinkdb->insertVendingMachineDrinkCount($vm->getId(), $addedExistingDrink, $addDrinkCount);
       return array("message" => "追加しました");
     }
   }
 
   public static function changeDrink($userEncrypt, $changedDrink, $changeDrinkStock){
-    $db = new Mapper();
+    $vmdrinkdb = new VendingMachineDrinkMapper();
     $userId = $_SESSION[$userEncrypt];
     $vm = $_SESSION[$userId . 'SES_KEY_VM'];
     // 自販機のdrinkArray,stockArrayの取得
@@ -179,7 +179,7 @@ class VendingMachineController{
           $drink = $drinkTableArray[$changedDrink];
           $drinkName = $drink->getName();
           $vm->setStock($drinkName, $changeDrinkStock);
-          $db->updateVMDrinkCount($changeDrinkStock, $vm->getId(), $drinkId);
+          $vmdrinkdb->updateVendingMachineDrinkCount($vm->getId(), $drinkId, $changeDrinkStock);
           return array("message" => "在庫を変更しました");
           break;
         }
@@ -188,7 +188,7 @@ class VendingMachineController{
   }
 
   public static function deleteDrink($userEncrypt, $deletedDrink){
-    $db = new Mapper();
+    $vmdrinkdb = new VendingMachineDrinkMapper();
     $userId = $_SESSION[$userEncrypt];
     $vm = $_SESSION[$userId . 'SES_KEY_VM'];
     // 自販機のdrinkArray,stockArrayの取得
@@ -208,7 +208,7 @@ class VendingMachineController{
         $drinkName = $drink->getName();
         unset($drinkArray[$drinkId]);
         $vm->unsetDrinkStock($drinkName);
-        $db->deleteVMDrink($vm->getId(), $drinkId);
+        $vmdrinkdb->deleteVendignMachineDrinkCount($vm->getId(), $drinkId);
         return array("message" => "削除完了！");
         break;
       }

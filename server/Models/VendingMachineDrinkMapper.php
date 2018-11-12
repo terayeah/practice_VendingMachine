@@ -30,7 +30,7 @@ class VendingMachineDrinkMapper extends MapperBase{
     return $this->updateDrinks("vending_machine_drink", "drink_count = :drink_count", array(":drink_count"=>$drink_count), $vending_machine_id, $drink_id);
   }
 
-  public function insertVendingMachineDrinkCount($vending_machine_id, $drink_id, $drink_count = 1){
+  public function insertVendingMachineDrinkCount($vending_machine_id, $drink_id, $drink_count){
     return parent::insert("vending_machine_drink (vending_machine_id, drink_id, drink_count) values (:vending_machine_id, :drink_id, :drink_count)",
                           array(':vending_machine_id' => $vending_machine_id,
                                 ':drink_id' => $drink_id,

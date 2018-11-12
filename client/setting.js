@@ -139,7 +139,7 @@ function displaySetDrinkView(info2 = ""){
       if(allDrinkOptions){
         body += "<select name='addedExistingDrink'>";
         body += allDrinkOptions;
-        body += "<input type='text' id='addDrinkCount' placeholder='個数'>";
+        body += "<input type='number' id='addDrinkCount' placeholder='個数'>";
         body += "</select>";
         body += "<button id='addExistingDrink'>追加</button>";
         body += "<br>";
