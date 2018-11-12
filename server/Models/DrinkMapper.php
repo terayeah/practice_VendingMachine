@@ -11,11 +11,11 @@ class DrinkMapper extends MapperBase{
     return parent::select("drink where id = :id", array(":id" => $id));
   }
 
-  public function updateName($id, $name){
+  public function updateName($name, $id){
     return parent::update("drink", "name = :name", array(":name"=>$name), $id);
   }
 
-  public function updatePrice($id, $price){
+  public function updatePrice($price, $id){
     return parent::update("drink", "price = :price", array(":price"=>$price), $id);
   }
 

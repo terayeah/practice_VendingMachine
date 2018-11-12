@@ -68,17 +68,19 @@ class VendingMachineController{
   }
 
   public static function setDrink($selectedVmId){
-    $db = new Mapper();
+    $vmdb = new VendingMachineMapper();
+    $vmdrinkdb = new VendingMachineDrinkMapper();
+    $drinkdb = new DrinkMapper();
     // 選択した自販機の取得
-    $vmRecord = $db->selectFromVendingMachineWhereId($selectedVmId);
+    $vmRecord = $vmdb->selectFromId($selectedVmId);
     $vm = new VendingMachine($vmRecord[0]['id'], $vmRecord[0]['name'], $vmRecord[0]['type'], $vmRecord[0]['cash'], $vmRecord[0]['suica'], $vmRecord[0]['charge']);
     // 自販機のdrinkArray,stockArrayの取得
-    $drink_in_vending_machine = $db->selectFromVMDrinkWhereVMId($vm->getId());
+    $drink_in_vending_machine = $vmdrinkdb->selectFromVmId($vm->getId());
     $vm->setDrinkArray($drink_in_vending_machine);
     $drinkArray = $vm->getDrinksJsonArray();
     //$drinkTableArrayの作成
     $drinkTableArray = array();
-    $drinkInfo = $db->selectFromDrink();
+    $drinkInfo = $drinkdb->selectAll();
     $_SESSION['drinkInfo'] = $drinkInfo;
 
     foreach ($drinkInfo as $value) {
