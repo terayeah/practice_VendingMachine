@@ -8,6 +8,7 @@ require_once("Models/UserDrinkMapper.php");
 require_once("Models/VendingMachineMapper.php");
 require_once("Models/VendingMachineDrinkMapper.php");
 require_once("Models/DrinkMapper.php");
+require_once("Models/helper.php");
 require_once("VendingMachine.php");
 require_once("User.php");
 require_once("Drink.php");

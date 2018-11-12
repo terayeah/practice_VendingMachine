@@ -1,18 +1,18 @@
 <?php
 
- function putCash($charge, $id, $userCash, $userName){
-  $this->db->exec("update vending_machine set charge = " . $charge . " where id = '" . $id . "'");
-  $this->db->exec("update users set cash = " . $userCash . " where name = '" . $userName . "'");
+function SqlPutCash($vmdb, $userdb, $vmid, $vmcharge, $userid, $usercash){
+  $vmdb->updateCharge($vmid, $vmcharge);
+  $userdb->updateCash($userid, $usercash);
 }
 
- function backChange($usercash, $username, $vmid){
-  $this->db->exec("update users set cash = " . $usercash . " where name = '" . $username . "'");
-  $this->db->exec("update vending_machine set charge = 0 where id = '" . $vmid . "'");
+function SqlBackChange($userdb, $vmdb, $userid, $usercash, $vmid, $vmcharge){
+  $userdb->updateCash($userid, $usercash);
+  $vmdb->updateCharge($vmid, $vmcharge);
 }
 
- function chargeSuica($usercash, $usersuica, $username){
-  $this->db->exec("update users set cash = " . $usercash . " where name = '" . $username . "'");
-  $this->db->exec("update users set suica = " . $usersuica . " where name = '" . $username . "'");
+function SqlChargeSuica($userdb, $userid, $usercash, $usersuica){
+  $userdb->updateCash($userid, $usercash);
+  $userdb->updateSuica($userid, $usersuica);
 }
 
  function buyCashVm($vmcharge, $vmcash, $vmid, $vmstockarraycount, $user, $drinkId){

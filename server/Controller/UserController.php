@@ -56,28 +56,39 @@ class UserController{
   }
 
   public static function putCash($userEncrypt, $howMuchCash){
-    $db = new Mapper();
+    $userdb = new UserMapper();
+    $vmdb = new VendingMachineMapper();
     $userId = $_SESSION[$userEncrypt];
     $vm = $_SESSION[$userId . 'SES_KEY_VM'];
     $user = $_SESSION[$userId . 'SES_KEY_USER'];
-    $result = $vm->putCash($user, $howMuchCash, $db);
+    $result = $vm->putCash($user, $howMuchCash);
+    $vmdb->beginTransaction();
+    SqlPutCash($vmdb, $userdb, $vm->getId(), $vm->getCharge(), $userId, $user->getCash());
+    $vmdb->commit();
     return $result;
   }
 
   public static function backChange($userEncrypt){
-    $db = new Mapper();
+    $userdb = new UserMapper();
+    $vmdb = new VendingMachineMapper();
     $userId = $_SESSION[$userEncrypt];
     $vm = $_SESSION[$userId . 'SES_KEY_VM'];
     $user = $_SESSION[$userId . 'SES_KEY_USER'];
-    $vm->backChange($user, $db);
+    $vm->backChange($user);
+    $vmdb->beginTransaction();
+    SqlBackChange($userdb, $vmdb, $userId, $user->getCash(), $vm->getId(), $vm->getCharge());
+    $vmdb->commit();
   }
 
   public static function charge($userEncrypt, $howMuchSuica){
-    $db = new Mapper();
+    $userdb = new UserMapper();
     $userId = $_SESSION[$userEncrypt];
     $vm = $_SESSION[$userId . 'SES_KEY_VM'];
     $user = $_SESSION[$userId . 'SES_KEY_USER'];
-    $user->chargeSuica($howMuchSuica, $db);
+    $user->chargeSuica($howMuchSuica);
+    $userdb->beginTransaction();
+    SqlChargeSuica($userdb, $userId, $user->getCash(), $user->getSuica());
+    $userdb->commit();
   }
 
   public static function selectedDrink($userEncrypt, $selectedDrink){

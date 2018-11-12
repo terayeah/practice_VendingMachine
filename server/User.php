@@ -86,7 +86,6 @@ class User{
     if($this->checkWallet($howMuch)){
       $this->decCash($howMuch);
       $this->addSuica($howMuch);
-      $db->chargeSuica($this->cash, $this->suica, $this->name);
     }
   }
 }

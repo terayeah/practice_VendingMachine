@@ -20,28 +20,32 @@ class VendingMachineController{
   }
 
   public static function drowvmview($userEncrypt, $selectedVmId){
-    $db = new Mapper();
+    $userdb = new UserMapper();
+    $vmdb = new VendingMachineMapper();
+    $drinkdb = new DrinkMapper();
+    $vmdrinkdb = new VendingMachineDrinkMapper();
+    $userdrinkdb = new UserDrinkMapper();
     //ログインユーザーの取得
     $userId = $_SESSION[$userEncrypt];
-    $userRecord = $db->selectFromUserWhereId($userId);
+    $userRecord = $userdb->selectFromId($userId);
     $user = new User($userRecord[0]['id'], $userRecord[0]['name'], $userRecord[0]['cash'], $userRecord[0]['suica']);
     $_SESSION[$userId . 'SES_KEY_USER'] = $user;
     // 選択した自販機の取得
-    $vmRecord = $db->selectFromVendingMachineWhereId($selectedVmId);
+    $vmRecord = $vmdb->selectFromId($selectedVmId);
     $vm = new VendingMachine($vmRecord[0]['id'], $vmRecord[0]['name'], $vmRecord[0]['type'], $vmRecord[0]['cash'], $vmRecord[0]['suica'], $vmRecord[0]['charge']);
     $_SESSION[$userId . 'SES_KEY_VM'] = $vm;
     // 商品データの取得
     if(!isset($_SESSION['drinkInfo'])){
-      $drinkInfo = $db->selectFromDrink();
+      $drinkInfo = $drinkdb->selectAll();
       $_SESSION['drinkInfo'] = $drinkInfo;
     }
     $drinkInfo = $_SESSION['drinkInfo'];
     // 自販機のdrinkArray,stockArrayの取得
-    $drink_in_vending_machine = $db->selectFromVMDrinkWhereVMId($vm->getId());
+    $drink_in_vending_machine = $vmdrinkdb->selectFromVmId($vm->getId());
     $_SESSION[$userId . 'SES_KEY_VM_DRINK_RECORD'] = $drink_in_vending_machine;
     $vm->setDrinkArray($db, $drink_in_vending_machine);
     // ユーザーのドリンクアレイ取得
-    $user_drink = $db->selectFromUserDrinkWhereUserId($userId);
+    $user_drink = $userdrinkdb->selectFromUserId($userId);
     $user->setDrinkArray($db, $user_drink);
 
     $user_drink_array = array();

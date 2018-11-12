@@ -59,5 +59,13 @@ class MapperBase{
     }
   }
 
+  public function beginTransaction() {
+    $this->db->beginTransaction();
+  }
+
+  public function commit() {
+    $this->db->commit();
+  }
+
 
 }

@@ -170,11 +170,10 @@ Class VendingMachine{
     return null;
   }
 
-  public function putCash($user, $howMuch, $db){
+  public function putCash($user, $howMuch){
     if($user->checkWallet($howMuch)){
       $this->addCharge($howMuch);
       $user->decCash($howMuch);
-      $db->putCash($this->charge, $this->id, $user->getCash(), $user->getName());
       return array("error" => null);
     }else{
       return array("error" => "お金が足りません");
@@ -235,12 +234,11 @@ Class VendingMachine{
     }
   }
 
-  public function backChange($user, $db){
+  public function backChange($user){
     $user->addCash($this->charge);
     $cash = $user->getCash();
     $name = $user->getName();
     $this->charge = 0;
-    $db->backChange($cash, $name, $this->id);
   }
 
 }
