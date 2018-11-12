@@ -74,7 +74,7 @@ class VendingMachineController{
     $vm = new VendingMachine($vmRecord[0]['id'], $vmRecord[0]['name'], $vmRecord[0]['type'], $vmRecord[0]['cash'], $vmRecord[0]['suica'], $vmRecord[0]['charge']);
     // 自販機のdrinkArray,stockArrayの取得
     $drink_in_vending_machine = $db->selectFromVMDrinkWhereVMId($vm->getId());
-    $vm->setDrinkArray($db, $drink_in_vending_machine);
+    $vm->setDrinkArray($drink_in_vending_machine);
     $drinkArray = $vm->getDrinksJsonArray();
     //$drinkTableArrayの作成
     $drinkTableArray = array();
@@ -114,7 +114,7 @@ class VendingMachineController{
     $vm = $_SESSION[$userId . 'SES_KEY_VM'];
     // 自販機のdrinkArray,stockArrayの取得
     $drink_in_vending_machine = $_SESSION[$userId . 'SES_KEY_VM_DRINK_RECORD'];
-    $vm->setDrinkArray($db, $drink_in_vending_machine);
+    $vm->setDrinkArray($drink_in_vending_machine);
     $drinkArray = $vm->getDrinks();
     if($drinkArray == null){
       $drinkArray = array();
@@ -155,7 +155,7 @@ class VendingMachineController{
     $vm = $_SESSION[$userId . 'SES_KEY_VM'];
     // 自販機のdrinkArray,stockArrayの取得
     $drink_in_vending_machine = $_SESSION[$userId . 'SES_KEY_VM_DRINK_RECORD'];
-    $vm->setDrinkArray($db, $drink_in_vending_machine);
+    $vm->setDrinkArray($drink_in_vending_machine);
     $drinkArray = $vm->getDrinks();
     //$drinkTableArrayの作成
     $drinkTableArray = array();
@@ -191,7 +191,7 @@ class VendingMachineController{
     $vm = $_SESSION[$userId . 'SES_KEY_VM'];
     // 自販機のdrinkArray,stockArrayの取得
     $drink_in_vending_machine = $_SESSION[$userId . 'SES_KEY_VM_DRINK_RECORD'];
-    $vm->setDrinkArray($db, $drink_in_vending_machine);
+    $vm->setDrinkArray($drink_in_vending_machine);
     $drinkArray = $vm->getDrinks();
     //$drinkTableArrayの作成
     $drinkTableArray = array();

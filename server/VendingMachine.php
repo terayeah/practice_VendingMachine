@@ -55,6 +55,10 @@ Class VendingMachine{
     $this->suica += $drinkPrice;
   }
 
+  public function getSuica(){
+    return $this->suica;
+  }
+
   public function getTotal(){
     $this->total = $this->cash + $this->suica;
     return $this->total;
@@ -221,23 +225,17 @@ Class VendingMachine{
     }
   }
 
-  public function buySuicaVm($user, $drinkArray, $db){
-    foreach ($drinkArray as $drinkId => $drink) {
-      if($_SESSION["choice"] == $drinkId){
-        if($this->checkSuica($user, $drink)){
-          $this->addSuica($drink->getPrice());
-          $this->decStock($drinkId);
-          $user->decSuica($drink->getPrice());
-          $user->addDrink($drinkId);
-          $db->buySuicaVm($this->suica, $this->id, $this->stockArray[$drink->getName()], $user, $drinkId);
-          $_SESSION["choice"] = "";
-          return array("error" => null,
-                        "message" => "ありがとうございます");
-          break;
-        }else{
-          return array("error" => "suica残高が足りません");
-        }
-      }
+  public function buySuicaVm($user, $drink, $drinkId){
+    if($this->checkSuica($user, $drink)){
+      $this->addSuica($drink->getPrice());
+      $this->decStock($drinkId);
+      $user->decSuica($drink->getPrice());
+      $user->addDrink($drinkId);
+      $_SESSION["choice"] = "";
+      return array("error" => null,
+                    "message" => "ありがとうございます");
+    }else{
+      return array("error" => "suica残高が足りません");
     }
   }
 

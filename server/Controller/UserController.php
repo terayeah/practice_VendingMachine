@@ -92,7 +92,6 @@ class UserController{
   }
 
   public static function selectedDrink($userEncrypt, $selectedDrink){
-    $userdb = new UserMapper();
     $vmdb = new VendingMachineMapper();
     $vmdrinkdb = new VendingMachineDrinkMapper();
     $userdrinkdb = new UserDrinkMapper();
@@ -103,15 +102,14 @@ class UserController{
     $drink_in_vending_machine = $_SESSION[$userId . 'SES_KEY_VM_DRINK_RECORD'];
     $vm->setDrinkArray($drink_in_vending_machine);
     $drinkArray = $vm->getDrinks();
-    $message;
     foreach ($drinkArray as $drinkId => $drink){
       if($selectedDrink == $drinkId){
         switch ($vm->getType()){
           case VendingMachine::$vm_type_Cash:
             $result = $vm->buyCashVm($user, $drink, $drinkId);
-            $userdb->beginTransaction();
+            $vmdb->beginTransaction();
             SqlBuyCashVm($vmdb, $vmdrinkdb, $userdrinkdb, $vm, $drinkId, $drink, $user);
-            $userdb->commit();
+            $vmdb->commit();
             return $result;
             break;
           case VendingMachine::$vm_type_Suica:
@@ -121,9 +119,9 @@ class UserController{
           case VendingMachine::$vm_type_Both:
             if($vm->getCharge() > 0){
               $result = $vm->buyCashVm($user, $drink, $drinkId);
-              $userdb->beginTransaction();
+              $vmdb->beginTransaction();
               SqlBuyCashVm($vmdb, $vmdrinkdb, $userdrinkdb, $vm, $drinkId, $drink, $user);
-              $userdb->commit();
+              $vmdb->commit();
               return $result;
             }elseif($vm->getCharge() == 0){
               $result = $vm->choiceSuicaDrink($drink, $drinkId);
@@ -137,16 +135,26 @@ class UserController{
   }
 
   public static function buySuica($userEncrypt){
-    $db = new Mapper();
+    $userdb = new UserMapper();
+    $vmdb = new VendingMachineMapper();
+    $vmdrinkdb = new VendingMachineDrinkMapper();
+    $userdrinkdb = new UserDrinkMapper();
     $userId = $_SESSION[$userEncrypt];
     $vm = $_SESSION[$userId . 'SES_KEY_VM'];
     $user = $_SESSION[$userId . 'SES_KEY_USER'];
     // 自販機のdrinkArray,stockArrayの取得
     $drink_in_vending_machine = $_SESSION[$userId . 'SES_KEY_VM_DRINK_RECORD'];
-    $vm->setDrinkArray($db, $drink_in_vending_machine);
+    $vm->setDrinkArray($drink_in_vending_machine);
     $drinkArray = $vm->getDrinks();
-    $result = $vm->buySuicaVm($user, $drinkArray, $db);
-    return $result;
+    foreach ($drinkArray as $drinkId => $drink) {
+      if($_SESSION["choice"] == $drinkId){
+        $result = $vm->buySuicaVm($user, $drink, $drinkId);
+        $vmdb->beginTransaction();
+        SqlBuySuicaVm($vmdb, $vmdrinkdb, $userdrinkdb, $userdb, $vm, $drinkId, $drink, $user);
+        $vmdb->commit();
+        return $result;
+      }
+    }
   }
 
 }
