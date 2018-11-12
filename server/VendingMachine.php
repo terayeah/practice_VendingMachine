@@ -47,6 +47,10 @@ Class VendingMachine{
     $this->cash += $drinkPrice;
   }
 
+  public function getCash(){
+    return $this->cash;
+  }
+
   public function addSuica($drinkPrice){
     $this->suica += $drinkPrice;
   }
@@ -108,8 +112,12 @@ Class VendingMachine{
     }
   }
 
-  public function getStock(){
+  public function getStockArray(){
     return $this->stockArray;
+  }
+
+  public function getStock($drinkname){
+    return $this->stockArray[$drinkname];
   }
 
   public function checkStock($drinkName){
@@ -124,7 +132,7 @@ Class VendingMachine{
     }
   }
 
-  public function setDrinkArray($db, $drink_in_vending_machine){
+  public function setDrinkArray($drink_in_vending_machine){
     foreach ($drink_in_vending_machine as $drink){
       $drink_id = $drink['drink_id'];
       $drink_stock = $drink['drink_count'];
@@ -180,7 +188,7 @@ Class VendingMachine{
     }
   }
 
-  public function buyCashVm($user, $drink, $drinkId, $db){
+  public function buyCashVm($user, $drink, $drinkId){
     if($user->checkWallet($drink->getPrice())){
       if($this->checkStock($drink->getName())){
         if($this->checkCharge($drink)){
@@ -188,7 +196,6 @@ Class VendingMachine{
           $this->addCash($drink->getPrice());
           $this->decStock($drinkId);
           $user->addDrink($drinkId);
-          $db->buyCashVm($this->charge, $this->cash, $this->id, $this->stockArray[$drink->getName()], $user, $drinkId);
           return array("error" => null,
                         "message" => "ありがとうございます");
         }else{
@@ -236,8 +243,6 @@ Class VendingMachine{
 
   public function backChange($user){
     $user->addCash($this->charge);
-    $cash = $user->getCash();
-    $name = $user->getName();
     $this->charge = 0;
   }
 

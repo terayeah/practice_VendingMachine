@@ -27,7 +27,7 @@ class VendingMachineDrinkMapper extends MapperBase{
   }
 
   public function updateVendingMachineDrinkCount($vending_machine_id, $drink_id, $drink_count){
-    return parent::updateDrinks("user_drink", "drink_count = :drink_count", array(":drink_count"=>$drink_count), $vending_machine_id, $drink_id);
+    return $this->updateDrinks("vending_machine_drink", "drink_count = :drink_count", array(":drink_count"=>$drink_count), $vending_machine_id, $drink_id);
   }
 
   public function insertVendingMachineDrinkCount($vending_machine_id, $drink_id, $drink_count = 1){

@@ -43,7 +43,7 @@ class VendingMachineController{
     // 自販機のdrinkArray,stockArrayの取得
     $drink_in_vending_machine = $vmdrinkdb->selectFromVmId($vm->getId());
     $_SESSION[$userId . 'SES_KEY_VM_DRINK_RECORD'] = $drink_in_vending_machine;
-    $vm->setDrinkArray($db, $drink_in_vending_machine);
+    $vm->setDrinkArray($drink_in_vending_machine);
     // ユーザーのドリンクアレイ取得
     $user_drink = $userdrinkdb->selectFromUserId($userId);
     $user->setDrinkArray($db, $user_drink);
@@ -62,7 +62,7 @@ class VendingMachineController{
         "vm" => $vm->getJsonArray(),
         "user" => $user->getJsonArray(),
         "vm_drink" => $vm->getDrinksJsonArray(),
-        "vm_stock" => $vm->getStock(),
+        "vm_stock" => $vm->getStockArray(),
         "user_drink" => $user_drink_array
     );
   }

@@ -82,7 +82,7 @@ class User{
     }
   }
 
-  public function chargeSuica($howMuch, $db){
+  public function chargeSuica($howMuch){
     if($this->checkWallet($howMuch)){
       $this->decCash($howMuch);
       $this->addSuica($howMuch);

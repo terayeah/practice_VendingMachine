@@ -27,7 +27,7 @@ class UserDrinkMapper extends MapperBase{
   }
 
   public function updateUserDrinkCount($user_id, $drink_id, $drink_count){
-    return parent::updateDrinks("user_drink", "drink_count = :drink_count", array(":drink_count"=>$drink_count), $user_id, $drink_id);
+    return $this->updateDrinks("user_drink", "drink_count = :drink_count", array(":drink_count"=>$drink_count), $user_id, $drink_id);
   }
 
   public function insertUserDrinkCount($user_id, $drink_id, $drink_count = 1){
