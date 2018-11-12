@@ -2,7 +2,6 @@
 require_once("Controller/UserController.php");
 require_once("Controller/VendingMachineController.php");
 require_once("Controller/DrinkController.php");
-require_once("Models/mapper.php");
 require_once("Models/UserMapper.php");
 require_once("Models/UserDrinkMapper.php");
 require_once("Models/VendingMachineMapper.php");
