@@ -191,14 +191,14 @@ function displayVmView(vmId){
 
         // 入金フォーム
         if (data.vm.type == vm_type_cash || data.vm.type == vm_type_both){
-          body += "<input type='text' id='howMuchCash' placeholder='金額を記入'>";
+          body += "<input type='number' id='howMuchCash' placeholder='金額を記入'>";
           body += "<button id='putCash'>入金</button>";
           body += "<button id='backChange'>お釣り</button>";
           body += "<br>";
         }
         // suicaフォーム
         if (data.vm.type == vm_type_suica || data.vm.type == vm_type_both){
-          body += "<input type='text' id='howMuchSuica' placeholder='Suicaへのチャージ額を記入'>";
+          body += "<input type='number' id='howMuchSuica' placeholder='Suicaへのチャージ額を記入'>";
           body += "<button id='charge'>チャージ</button>";
           body += "<br>";
         }

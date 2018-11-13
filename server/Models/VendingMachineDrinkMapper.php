@@ -4,49 +4,43 @@ require_once("MapperBase.php");
 class VendingMachineDrinkMapper extends MapperBase{
 
   public function selectAll(){
-    return parent::select("vending_machine_drink");
+    return parent::select("vending_machine_drink")
+    ->content()
+    ->fetchAll();
   }
 
   public function selectFromVmId($vending_machine_id){
-    return parent::select("vending_machine_drink where vending_machine_id = :vending_machine_id", array(":vending_machine_id" => $vending_machine_id));
-  }
-
-  public function updateDrinks($table, $change, $data = array(), $vending_machine_id, $drink_id) {
-    try {
-      $stmt = $this->db->prepare("update " . $table . " set " . $change . " where vending_machine_id = " . $vending_machine_id . " and drink_id = " . $drink_id);
-      if ($stmt->execute($data)) {
-        return true;
-      }
-      else {
-        return false;
-      }
-    }
-    catch (Exception $e) {
-      return false;
-    }
+    return parent::select("vending_machine_drink")
+    ->where("vending_machine_id = :vending_machine_id")
+    ->content(array(":vending_machine_id" => $vending_machine_id))
+    ->fetchAll();
   }
 
   public function updateVendingMachineDrinkCount($vending_machine_id, $drink_id, $drink_count){
-    return $this->updateDrinks("vending_machine_drink", "drink_count = :drink_count", array(":drink_count"=>$drink_count), $vending_machine_id, $drink_id);
+    parent::update("vending_machine_drink")
+    ->setCol("drink_count = :drink_count")
+    ->where("vending_machine_id = :vending_machine_id")
+    ->and("drink_id = :drink_id")
+    ->content(array(":drink_count" => $drink_count,
+    ":vending_machine_id" => $vending_machine_id,
+    ":drink_id" => $drink_id));
   }
 
   public function insertVendingMachineDrinkCount($vending_machine_id, $drink_id, $drink_count){
-    return parent::insert("vending_machine_drink (vending_machine_id, drink_id, drink_count) values (:vending_machine_id, :drink_id, :drink_count)",
-                          array(':vending_machine_id' => $vending_machine_id,
-                                ':drink_id' => $drink_id,
-                                ':drink_count' => $drink_count
-                                )
-                          );
+    parent::insert("vending_machine_drink (vending_machine_id, drink_id, drink_count)")
+    ->values("(:vending_machine_id, :drink_id, :drink_count)")
+    ->content(array(':vending_machine_id' => $vending_machine_id,
+          ':drink_id' => $drink_id,
+          ':drink_count' => $drink_count
+        ));
   }
 
-  public function deleteVendignMachineDrinkCount($vending_machine_id, $drink_id) {
-    try {
-      $stmt = $this->db->exec("delete from vending_machine_drink where vending_machine_id = " . $vending_machine_id . " and drink_id = " . $drink_id);
-      return true;
-    }
-    catch (Exception $e) {
-      return false;
-    }
+  public function deleteVendignMachineDrinkCount($vending_machine_id, $drink_id){
+    parent::delete("vending_machine_drink")
+    ->where("vending_machine_id = :vending_machine_id")
+    ->and("drink_id = :drink_id")
+    ->content(array(":vending_machine_id" => $vending_machine_id,
+                  ":drink_id" => $drink_id));
   }
 
 

@@ -9,54 +9,61 @@ define('_DIR_', '/opt/local/www/apache2/html/lessons/a_vending_machine');
 class MapperBase{
 
   protected $db;
+  protected $sql;
+  protected $stmt;
 
   public function __construct(){
     $this->db = new PDO(PDO_DSN, DB_USERNAME, DB_PASSWORD);
   }
 
-  public function select($table, $data = array()) {
-    try {
-      $stmt = $this->db->prepare("select * from " . $table);
-      if ($stmt->execute($data)) {
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-      }
-      else {
-        return false;
-      }
-    }
-    catch (Exception $e) {
-      return false;
-    }
+  public function select($table) {
+    $this->sql = "select * from " . $table;
+    return $this;
   }
 
-  public function insert($table, $data = array()) {
-    try {
-      $stmt = $this->db->prepare("insert into " . $table);
-      if ($stmt->execute($data)) {
-        return true;
-      }
-      else {
-        return false;
-      }
-    }
-    catch (Exception $e) {
-      return false;
-    }
+  public function where($column){
+    $this->sql .= " where " . $column;
+    return $this;
   }
 
-  public function update($table, $change, $data = array(), $id) {
-    try {
-      $stmt = $this->db->prepare("update " . $table . " set " . $change . " where id = " . $id);
-      if ($stmt->execute($data)) {
-        return true;
-      }
-      else {
-        return false;
-      }
-    }
-    catch (Exception $e) {
-      return false;
-    }
+  public function and($column){
+    $this->sql .= " and " . $column;
+    return $this;
+  }
+
+  public function content($data = array()){
+    $this->stmt = $this->db->prepare($this->sql);
+    $this->stmt->execute($data);
+    return $this;
+  }
+
+  public function fetchAll(){
+    return $this->stmt->fetchAll(PDO::FETCH_ASSOC);
+  }
+
+  public function insert($table){
+    $this->sql = "insert into " . $table;
+    return $this;
+  }
+
+  public function values($values){
+    $this->sql .= " values " . $values;
+    return $this;
+  }
+
+  public function update($table){
+    $this->sql = "update " . $table;
+    return $this;
+  }
+
+  public function setCol($column){
+    $this->sql .= " set " . $column;
+    return $this;
+  }
+
+  public function delete($table){
+    $this->sql = "delete from " . $table;
+    return $this;
   }
 
   public function beginTransaction() {

@@ -19,7 +19,7 @@ class UserController{
       if(!$isUpdated){
         $salt = createSalt();
         $encrypted_password = crypt($newPassword, $salt);
-        $userdb->insertUser($newUsername, $salt, $encrypted_password);
+        $a = $userdb->insertUser($newUsername, $salt, $encrypted_password);
         return array(
             "message" => "新規登録完了です"
         );
