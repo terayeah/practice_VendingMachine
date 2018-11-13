@@ -11,29 +11,41 @@ class MapperBase{
   protected $db;
   protected $sql;
   protected $stmt;
+  protected $data = array();
 
   public function __construct(){
     $this->db = new PDO(PDO_DSN, DB_USERNAME, DB_PASSWORD);
   }
 
-  public function select($table) {
-    $this->sql = "select * from " . $table;
+  public function select($column = "*") {
+    $this->sql = "select " . $column;
     return $this;
   }
 
-  public function where($column){
-    $this->sql .= " where " . $column;
+  public function from($table) {
+    $this->sql .= " from " . $table;
     return $this;
   }
 
-  public function and($column){
-    $this->sql .= " and " . $column;
+  public function where($column = array()){
+    for($i=0; $i<count($column); $i++){
+      if($i == 0){
+        $this->sql .= " where " . $column[$i];
+      }else{
+        $this->sql .= " and " . $column[$i];
+      }
+    }
     return $this;
   }
 
-  public function content($data = array()){
+  public function setData($data = array()){
+    $this->data = $data;
+    return $this;
+  }
+
+  public function execute(){
     $this->stmt = $this->db->prepare($this->sql);
-    $this->stmt->execute($data);
+    $this->stmt->execute($this->data);
     return $this;
   }
 
